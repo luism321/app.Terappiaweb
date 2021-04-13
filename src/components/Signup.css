@@ -1,0 +1,32 @@
+
+.icon{
+    font-size: 65px;
+    background:rgb(229, 123, 255);
+    padding: 5px;
+    border-radius: 100px;
+    color: aliceblue;
+}
+#pacientes{
+    background: rgb(0,0,0);
+    background: linear-gradient(153deg, #837BEC 2%, rgba(72,232,231,1) 70%);
+    border-radius: 30px;
+    margin: auto;
+    width: 300px;
+}
+#especialista{
+    background: rgb(0,0,0);
+    background: linear-gradient(153deg, rgb(72, 232, 231,1) 2%, #837BEC 70%);
+    border-radius: 30px;
+    margin: auto;
+    width: 300px;
+}
+
+::placeholder{
+    background-color: #ffffffc5;
+    
+}
+
+
+
+  
+   

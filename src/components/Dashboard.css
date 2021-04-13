@@ -1,0 +1,518 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root{
+    --main-color:#837BEC;
+    --color-dark:#1D2231;
+    --text-grey:#8390A2;
+}
+*{
+  font-family: 'Ppppins',sans-serif;
+  margin: 0;
+  padding: 0;
+    text-decoration: none;
+    list-style-type: none;
+    box-sizing: border-box;
+}
+#sidebar-toggle{
+    display: none;
+}
+.sidebar{
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    overflow-y: auto;
+    background: var(--main-color);
+    color: rgb(255, 255, 255);
+    transition: width 500ms;
+}
+ #ig{
+    height: 50px;
+    width: 150px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url("/src/img/Terappia-1.png");
+}
+.sidebar-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    color:rgb(0, 0, 0);
+    padding:0rem 1rem;
+    background:  #FFF;
+}
+
+
+ #cerrar{
+    margin-top: 50px;
+    color: red;
+}
+.sidebar-menu{
+    padding: 1rem;
+    
+}
+
+.sidebar li{
+    margin-bottom: 1.2rem;
+}
+#ti-face-smile{
+    color: red;
+}
+#planes{
+    color: rgb(255, 196, 0);
+}
+.sidebar a{
+    color: #FFF;
+    font-size: 2rem;
+}
+.sidebar a span{
+    color: #FFF;
+    font-size: 1rem;
+}
+.sidebar a span:last-child{
+    padding-left: .6rem;
+}
+#sidebar-toggle:checked ~ .sidebar {
+    width: 90px;
+}
+#sidebar-toggle:checked ~ .main-content {
+    margin-left: 90px;
+}
+#sidebar-toggle:checked ~ .main-content header {
+    left: 105px;
+}
+
+#sidebar-toggle:checked ~ .sidebar .sidebar-header h3 span  ,
+#sidebar-toggle:checked ~ .sidebar  li span:last-child{
+    display: none;
+
+}
+#sidebar-toggle:checked ~ .sidebar .sidebar-header,
+#sidebar-toggle:checked ~ .sidebar  li {
+    display: flex;
+    justify-content: center;
+
+}
+
+.main-content{
+    position: relative;
+    margin-left: 250px;
+    transition: margin-left 500ms;
+}
+header{
+    position: fixed;
+    left: 265px;
+    top: 0;
+    z-index: 100;
+    width: calc(100% - 255px);
+    background: #FFF;
+    height: 80px;
+    padding: 0rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #CCC;
+    transition: left 500ms;
+}
+.search-wrapper{
+    display: flex;
+    align-items: center;
+}
+.search-wrapper input{
+    border: 0;
+    outline: 0;
+    padding: 1rem;
+    height: 38px;
+}
+.social-icons{
+    display: flex;
+    align-items: center;
+}
+.social-icons span,
+.social-icons div{
+    margin-left: 1.2rem;
+}
+.social-icons div{
+    height: 35px;
+    width: 35px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url("../img/Terappia-4.png");
+    border-radius: 50%;
+}
+
+main{
+    margin-top:80px ;
+    background: #f1f5f9;
+    min-height: 90hv;
+    padding: 1rem 3rem;
+    border-top: 1px solid #CCC;
+}
+.dash-title{
+    color: var(--color-dark);
+    margin-bottom: 1rem;
+}
+.dash-title_2{
+    margin-top: 3rem;
+    color: red;
+    margin-bottom: 1rem;
+    
+}
+.dash-cards{
+    display: grid;
+    grid-template-columns:repeat(3,1fr) ;
+    grid-column-gap: 3rem;
+    
+}
+.dash-cards_1{
+    display: grid;
+    grid-template-columns:repeat(3,1fr) ;
+    grid-column-gap: 3rem;
+}
+.card-single{
+    margin-bottom: 1rem;
+    background: #FFF;
+    border-radius: 7px;
+    box-shadow: 0 4px 8px 0 rgba(179, 80, 236, 0.2), 0 6px 20px 0 rgba(73, 41, 255, 0.19);
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 255, 221, 0.2), 0 6px 20px 0 rgba(146, 30, 255, 0.19);
+    -moz-box-shadow: 0 4px 8px 0 rgba(0, 255, 221, 0.2), 0 6px 20px 0 rgba(20, 239, 255, 0.19);
+}
+.card-body{
+    padding: 1.3rem 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.card-body #A-1 ,
+.card-body #A-2,
+.card-body #A-3 {
+    font-size: 1rem;
+    padding-right: 2rem;
+    padding: 2rem;
+    height: 35px;
+    width: 35px;
+    background-size: cover;
+    background-repeat: no-repeat;
+   
+    border-radius: 50%;
+}
+#A-1{
+    background-image: url("../img/descarga.jpg");
+}
+#A-2{
+    background-image: url("../img/descarga.jpg");
+}
+#A-3{
+    background-image: url("../img/descarga\ \(1\).jpg");
+}
+.card-body  h5{
+    font-size: 1.2rem;
+    color:var(--text-grey);
+   
+}
+.card-body  h4{
+    font-size: 1.2rem;
+    color:var(--color-dark);
+   margin-top: .2rem;
+}
+.card-footer{
+    padding:.2rem 1.3rem;
+    background: rgb(230, 230, 230);
+}
+.card-footer a{
+    color: var(--main-color);
+}
+
+.recent{
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+.activity-grip{
+    display: grid;
+    grid-template-columns: 75% 25%;
+    grid-column-gap: 1.5rem;
+}
+.bday-card,
+.summary-card,
+.activity-card{
+    background: #FFF;
+    border-radius: 7px;
+}
+.activity-card h3{
+    color:var(--text-grey);
+    padding: 1rem;
+}
+.activity-card table{
+    width: 100%;
+    border-collapse: collapse;
+}
+.activity-card thead{
+    background: #efefef;
+   text-align: left;
+}
+th,td{
+    font-size: .9rem;
+    padding: 1rem .5rem;
+    color: var(--color-dark);
+}
+td{
+    font-size: .8rem;
+}
+tbody tr:nth-child(even)
+{
+    background: #f8f8f8;
+}
+.badge{
+    padding: .2rem 1rem;
+    border-radius: 28px;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+.badge.success{
+    background: #d2ffcc;
+    color: var(--main-color);
+}
+.badge.danger{
+    background: #ec9292;
+    color: var(--main-color);
+}
+.td-team{
+    display: flex;
+    align-items: center;
+}
+.img-1,
+.img-2{
+    height: 38px;
+    width: 38px;
+    border-radius: 50%;
+    margin-left: -10px;
+    border: 3px solid #ccfaff;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.img-1{
+    background-image: url("../img/descarga.jpg");
+}
+.img-2{
+    background-image: url("../img/descarga\ \(1\).jpg");
+}
+.summary-card,
+.bday-card{
+    margin-bottom: 1.5rem;
+    padding: .5rem;
+    padding-bottom: .5rem;
+}
+.summary-single{
+    padding: .5rem 1rem;
+    display: flex;
+    align-items: center;
+}
+.summary-single span{
+    font-size: 1.5rem;
+    color: #777;
+    padding-right: 1rem;
+}
+
+.summary-single h5{
+    font-size: 1.1rem;
+    color: #1100ff;
+    margin-bottom: 0rem !important;
+}
+.summary-single small{
+    font-weight: 700;
+    color: var(--text-grey);
+}
+.bday-flex{
+    display: flex;
+    align-items: center;
+    margin-bottom: .3rem;
+}
+.bday-card{
+    padding: 1rem;
+    
+}
+.bday-img{
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    border: 3px solid #ccfaff;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url("../img/descarga\ \(1\).jpg");
+    margin-right: 1rem;
+}
+.text-center{
+    text-align: center;
+}
+.text-center span{
+    padding-right: .2rem;
+}
+.text-center button{
+    background: linear-gradient(153deg, rgb(72, 232, 231,1) 2%, #837BEC 70%);
+    color: #FFF;
+    border: 1px solid var(--main-color);
+    border-radius: 4px;
+    padding: .4rem 1rem;
+}
+.table-responsive{
+    overflow-x: auto;
+}
+@media only screen and (max-width:1200px){
+    .sidebar{
+        width:60px;
+        z-index: 150;
+    }
+    header{
+        position: fixed;
+        left: 255px;
+        top: 0;
+        z-index: 100;
+        width: calc(100% - 20px);
+        background: #FFF;
+        height: 80px;
+        padding: 0rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #CCC;
+        transition: left 500ms;
+    }
+    .main-content {
+        margin-left: 60px;
+    }
+    .main-content header {
+        left: 75px;
+    }
+    
+    .sidebar .sidebar-header h3 span,
+    .sidebar  li span:last-child{
+        display: none;
+    
+    }
+    .sidebar .sidebar-header,
+    .sidebar  li {
+        display: flex;
+        justify-content: center;
+    }
+    #sidebar-toggle:checked ~ .sidebar {
+        width: 240px;
+    }
+    #sidebar-toggle:checked ~ .main-content {
+        margin-left: 60px;
+    }
+    #sidebar-toggle:checked ~ .main-content header {
+        left: 75px;
+    }
+    
+    #sidebar-toggle:checked ~ .sidebar .sidebar-header h3 span,
+    #sidebar-toggle:checked ~ .sidebar  li span:last-child{
+        display: inline;
+    
+    }
+    #sidebar-toggle:checked ~ .sidebar .sidebar-header{
+        display: flex;
+        justify-content: space-between;
+    }
+    #sidebar-toggle:checked ~ .sidebar  li {
+        display: block;
+       
+    }
+    #sidebar-toggle:checked ~ .main-content{
+        margin-left: 60px;
+    }
+    #sidebar-toggle:checked ~ .main-content header {
+        left: 75px;
+    }
+}
+@media only screen and (max-width:860px){
+    
+    .dash-cards{
+        grid-template-columns: repeat(2,1fr);
+
+    }
+    .dash-cards_1{
+        grid-template-columns: repeat(2,1fr);
+
+    }
+    .card-single{
+        margin-bottom: 1rem;
+    }
+    .activity-grip{
+        display: block;
+    }
+    .summary-card{
+        margin-top: 1.5rem;
+
+    }
+    header{
+        position: fixed;
+        left: 255px;
+        top: 0;
+        z-index: 100;
+        width: calc(100% - 20px);
+        background: #FFF;
+        height: 80px;
+        padding: 0rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #CCC;
+        transition: left 500ms;
+    }
+}
+@media only screen and (max-width:600px){
+    .dash-cards{
+        grid-template-columns:100%;
+        overflow-x: auto;
+    }
+    .dash-cards_1{
+        overflow-x: auto;
+    }
+    header{
+        position: fixed;
+        left: 255px;
+        top: 0;
+        z-index: 100;
+        width: calc(100% - 20px);
+        background: #FFF;
+        height: 80px;
+        padding: 0rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #CCC;
+        transition: left 500ms;
+    }
+    
+}
+@media only screen and (max-width:450px){
+    main{
+        padding-left: 2rem;
+        padding-right: 1rem;
+        overflow-x: auto;
+    }
+    .dash-cards{
+        grid-template-columns:100%;
+        overflow-x: auto;
+    }
+    header{
+        position: fixed;
+        left: 265px;
+        top: 0;
+        z-index: 100;
+        width: calc(100% - 20px);
+        background: #FFF;
+        height: 80px;
+        padding: 0rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #CCC;
+        transition: left 500ms;
+    }
+    
+}
