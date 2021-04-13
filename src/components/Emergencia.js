@@ -5,11 +5,17 @@ import {db} from "../firebase"
 import { useAuth } from "../contexts/AuthContext"
 
 export default function Destacados() {
-    const [currentDatosPaDe, setcurrenDatosPaDe ] = useState();
     const { currentUser } = useAuth();
-
+    const [currentDatosPaDe, setcurrenDatosPaDe ] = useState();
     
- 
+    const array=[];
+    db.collection("Usuarios").where("TipoUSer","==","Especialista").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+           let use=doc.data()
+           array.push(use);
+        });
+        setcurrenDatosPaDe(array);
+    });
   return (
     <>
     <body>

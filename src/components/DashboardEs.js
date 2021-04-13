@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import {  Link,useHistory } from "react-router-dom";
+import {  useHistory } from "react-router-dom";
 import './Dashboard.css';
-import { faHome,faUser,faAmbulance,faReceipt,faVideo,faBriefcaseMedical,faDollarSign,faClinicMedical,faNotesMedical,faCity,faHistory,faPowerOff,faBars,faSearch,faBell,faCommentAlt,faSmile,faGift,faIdBadge,faCalendar} from "@fortawesome/free-solid-svg-icons";
+import { faHome,faUser,faAmbulance,faReceipt,faVideo,faBriefcaseMedical,faClinicMedical,faNotesMedical,faPowerOff,faBars,faSearch,faBell,faCommentAlt,faGift,faIdBadge,faCalendar} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {  Alert } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext";
 import {db} from "../firebase"
 import firebase from "../firebase"
 import UpdatePro from "./UpdateProfilePa";
-
-
+import Emergenci from "./Emergencias";
+import Agendas from "./Agendas";
 export default function DashboardEs() {
     const [error, setError] = useState("");
     const history = useHistory()
@@ -61,6 +61,22 @@ const onupda=(e)=>{
        
         }
     }
+const onEmer=(e)=>{
+        let res=e
+        if(res="Emergencias"){
+            setFirstUpda(res)
+            setFirstMain(false)
+           
+            }
+        }
+const onAgen=(e)=>{
+let res=e
+if(res="Agendas"){
+setFirstUpda(res)
+setFirstMain(false)
+               
+        }
+            }
 
 const onInicio=(e)=>{
 let res=e
@@ -96,15 +112,15 @@ setFirstMain(true)
                 </a>
             </li>
             <li>
-                <a>
+                <a onClick={(e)=>onEmer("Emergencias",e)}>
                     <a Id="ti-face-smile"><FontAwesomeIcon icon={faAmbulance}/></a>
                     <span >Emergencias</span>
                 </a>
             </li>
             <li>
-                <a >
+                <a onClick={(e)=>onAgen("Agendas",e)}>
                     <a className="ti-face-smile"><FontAwesomeIcon icon={faClinicMedical}/></a>
-                    <span>Citas Diarias</span>
+                    <span>Agenda de citas</span>
                 </a>
             </li>
             <li>
@@ -196,6 +212,16 @@ setFirstMain(true)
         :
         <span></span>
         }
+        {UpdateProfilePa==="Emergencias"?
+        <Emergenci/>
+        :
+        <span></span>
+        }
+        {UpdateProfilePa==="Agendas"?
+        <Agendas/>
+        :
+        <span></span>
+        }
         {firtMain=== true?
         <main>
             <h2 className="dash-title a"><h1>Consultas para hoy</h1></h2>
@@ -221,48 +247,7 @@ setFirstMain(true)
                           <p></p>
                         )}
                 </div>
-            <h2 className="dash-title_2 b"><h1>Emergencias</h1></h2>
-            <div className="dash-cards_1">
-                <div className="card-single">
-                    <div className="card-body">
-                    <div>
-                        <label>Paciente:</label>
-                        <h5>Manuel alvares</h5>
-                        <label></label>
-                            <h4>Urgente</h4>
-                        </div>
-                    </div>
-                    <div className="card-footer">
-                        <a href="">Atender emergencia</a>
-                    </div>
-                </div>
-                <div className="card-single">
-                    <div className="card-body">
-                        <div>
-                            <label>Paciente:</label>
-                            <h5>Manuel alvares</h5>
-                            <label></label>
-                            <h4>Urgente</h4>
-                        </div>
-                    </div>
-                    <div className="card-footer">
-                    <a href="">Atender emergencia</a>
-                    </div>
-                </div>
-                <div className="card-single">
-                    <div className="card-body">
-                    <div>
-                        <label>Paciente:</label>
-                            <h5>Manuel alvares</h5>
-                            <label></label>
-                            <h4>Urgente</h4>
-                        </div>
-                    </div>
-                    <div className="card-footer">
-                    <a href="">Atender emergencia</a>
-                    </div>
-                </div>
-            </div> 
+            
 <section className="recent">
     <div className="activity-grip">
         <div className="activity-card">
