@@ -89,6 +89,7 @@ export default function AgendarCitasNew() {
           let datos = doc.data()
           datos.$key = doc.id
           Horarios.push(datos);
+          console.log(datos)
         });
         if (Horarios.length > 0) {
           db.collection("Citas").where("uid_especialista", "==", id).where("fecha","==", e)
@@ -123,9 +124,9 @@ export default function AgendarCitasNew() {
                 console.log(HorasDis)
                 // setArrayCitas(citas)
               } else {
-                setHoraDisponible([])
-                setDias([])
-                setHorasDis([])
+                setHoraDisponible(Horarios[0].horas)
+                setDias(Horarios[0].horas)
+                setHorasDis(Horarios[0].horas)
                 console.log("no hay info")
               }
             });
