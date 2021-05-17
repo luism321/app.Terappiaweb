@@ -32,14 +32,18 @@ export default function AgendarCitasNew() {
 
   const id = JSON.parse(localStorage.getItem('id'))
 
-  const arrayNew=HorasDis.horas
 
-  console.log(HorasDis)
 
-  for (let i = 0; i < arrayNew; i++) { 
-    setHorasDis(arrayNew[i])
-    }
-    
+  // variables Evander
+  const [HoraDisponible, setHoraDisponible] = useState([])
+
+  // const arrayNew=HorasDis.horas
+
+
+  // for (let i = 0; i < arrayNew; i++) { 
+  //   setHorasDis(arrayNew[i])
+  //   }
+
   const TraerDatos = () => {
     db.collection("Usuarios")
       .doc(currentUser.uid)
@@ -66,50 +70,109 @@ export default function AgendarCitasNew() {
       });
 
   };
-  
+
   useEffect(() => {
+    console.log("aqui")
     TraerDatos();
+    // Fecha("2021-05-11")
   }, []);
 
 
+  const [myArray, updateMyArray] = useState([]);
 
-const  Fecha=(e)=>{
-  setFecha(e)
-  db.collection("Usuarios").doc(id).collection("Horarios").where("uid", "==", id).where("dia", "==",moment(e).format("dddd")).onSnapshot((querySnapshot) => {
-      const docs = [];
-      const diadocs = [];
-      querySnapshot.forEach((doc) => {
-        diadocs.push(doc.data().dia);
-        docs.push(doc.data());
+  const Fecha = (e,dataInfo) => {
+    setFecha(e)
+    db.collection("Usuarios").doc(id).collection("Horarios").where("uid", "==", id).where("dia", "==", moment(e).format("dddd"))
+      .onSnapshot(function (querySnapshot) {
+        var Horarios = [];
+        querySnapshot.forEach(function (doc) {
+          let datos = doc.data()
+          datos.$key = doc.id
+          Horarios.push(datos);
+        });
+        if (Horarios.length > 0) {
+          db.collection("Citas").where("uid_especialista", "==", id).where("fecha","==", e)
+            .onSnapshot(function (querySnapshot) {
+              var citas = [];
+              querySnapshot.forEach(function (doc) {
+                let datos = doc.data()
+                datos.$key = doc.id
+                citas.push(datos);
+              });
+              console.log(Horarios)
+              console.log(citas)
+              if (citas.length > 0) {
+                setHoraDisponible([])
+                let info = []
+                Horarios[0].horas.forEach(element=>{
+                  let contador = 0
+                  citas.forEach(data=>{
+                    if (element == data.hora){
+                      contador++
+                    }
+                  })
+                  if(contador == 0){
+                    info.push(element)
+                  }
+                })
+                setHoraDisponible(info)
+                setDias(info)
+                setHorasDis(info)
+                console.log(HoraDisponible)
+                console.log(Dias)
+                console.log(HorasDis)
+                // setArrayCitas(citas)
+              } else {
+                setHoraDisponible([])
+                setDias([])
+                setHorasDis([])
+                console.log("no hay info")
+              }
+            });
+        } else {
+          console.log("no hay info")
+          setHoraDisponible([])
+          setDias([])
+          setHorasDis([])
+        }
       });
-      setDias(diadocs)
-      setHorasDis(docs)
-    });
-    
+
+    // db.collection("Usuarios").doc(id).collection("Horarios").where("uid", "==", id).where("dia", "==",moment(e).format("dddd")).onSnapshot((querySnapshot) => {
+    //     const docs = [];
+    //     const diadocs = [];
+    //     querySnapshot.forEach((doc) => {
+    //       diadocs.push(doc.data().dia);
+    //       docs.push(doc.data());
+    //     });
+    //     console.log(docs)
+    //     setDias(diadocs)
+    //     setHorasDis(docs)
+    //   });
+    //   db.collection("Citas").where("uid_especialista", "==", id).where("fecha","==", e).onSnapshot((querySnapshot) => {
+    //     const docsCitas = [];
+    //     querySnapshot.forEach((doc) => {
+    //       docsCitas.push(doc.data().hora);
+    //     });
+    //     console.log(docsCitas)
+    // setArrayCitas(docsCitas)
+    // 
+
+    // console.log(ArrayHora)
+    // console.log(Hra)
+    // console.log(ArrayCitas)
+
+    //  console.log(HorasDispo)
+    //  console.log(ArrayCitas)
+    // for(let i=0;i<arrayNew.length;i++){
+
+    // let res= HorasDispo.find(a=>a!==ArrayCitas)
+    // console.log(res)
+    // }
+    // });
   }
-  
 
-      // db.collection("Citas").where("uid_especialista", "==", id).where("fecha","==", e).onSnapshot((querySnapshot) => {
-      //   const docs = [];
-      //   querySnapshot.forEach((doc) => {
-      //     docs.push(doc.data().hora);
-      //   });
-      //   setArrayCitas(docs)
-      //   // 
 
-      //   console.log(ArrayHora)
-      //   console.log(Hra)
-      //   console.log(ArrayCitas)
 
-      // //  console.log(HorasDispo)
-      // //  console.log(ArrayCitas)
-      //   // for(let i=0;i<arrayNew.length;i++){
-
-      //     // let res= HorasDispo.find(a=>a!==ArrayCitas)
-      //     // console.log(res)
-      //   // }
-      // });
-    
 
 
 
@@ -258,12 +321,11 @@ const  Fecha=(e)=>{
                 <label className="form-control">Seleccione su dia:</label>
               </div>
               <div className="text-center">
-                <input type="date" className="form-control col-md-4" onChange={(e) => Fecha(e.target.value,e)}></input>
-              </div>
+                <input type="date" className="form-control col-md-4" onChange={(e) => Fecha(e.target.value)}></input>
+              </div> 
             </div>
-
             <div className="dash-cards">
-              {Dias.length ? (
+              {Dias.length != undefined ? (
                 Dias.map(array => (
                   <div className="card-single">
                     <div className="card-body">
@@ -273,18 +335,19 @@ const  Fecha=(e)=>{
                         </div>
                       </div>
                       <div>
-                        <div>
-                      {HorasDis.length?(
-                        HorasDis.map(hora=>(
-                          <div>{hora.horas.map(mostrar=>(
-                            <div><input type="checkbox"  onChange={(e)=>TomarHoraCita(e.target.value,e)} value={mostrar} onClick={(e)=>most("mostrar",e)}/>{mostrar}</div>
-                          ))}</div>
-                           ))
-                         ) 
-                         :
-                         (
-                         <p></p>
-                         )}
+                      <div>
+                          {HoraDisponible != undefined ? (
+                            HoraDisponible.map(hora => (
+                              <div><input type="checkbox" onChange={(e) => TomarHoraCita(e.target.value, e)} value={hora} onClick={(e) => most("mostrar", e)} />{hora}</div>
+                              // <div>{hora.map(mostrar => (
+                              //   <div><input type="checkbox" onChange={(e) => TomarHoraCita(e.target.value, e)} value={mostrar} onClick={(e) => most("mostrar", e)} />{mostrar}</div>
+                              // ))}</div>
+                            ))
+                          )
+                            :
+                            (
+                              <p></p>
+                            )}
                         </div>
                       </div>
 
@@ -296,6 +359,7 @@ const  Fecha=(e)=>{
                 <p></p>
               )}
             </div>
+           
 
           </main>
           : <div></div>}
@@ -320,19 +384,19 @@ const  Fecha=(e)=>{
                   <button onClick={AgregarConsulta}>Registrar consulta</button>
                 </div>
               </div>
-              </div>
-            <div>{Exito && 
-            <Alert show={show} variant="success">
-            <Alert.Heading className="text-center">{Exito}</Alert.Heading>
-            <hr />
-            <div className="d-flex justify-content-end">
-              <button className="btn btn" onClick={() => setShow(false)} variant="outline-success">
-                <Link to="/">Cerrar X</Link>
-              </button>
             </div>
-          </Alert>
+            <div>{Exito &&
+              <Alert show={show} variant="success">
+                <Alert.Heading className="text-center">{Exito}</Alert.Heading>
+                <hr />
+                <div className="d-flex justify-content-end">
+                  <button className="btn btn" onClick={() => setShow(false)} variant="outline-success">
+                    <Link to="/">Cerrar X</Link>
+                  </button>
+                </div>
+              </Alert>
             }
-            
+
             </div>
           </main>
           : <div></div>}
