@@ -123,9 +123,9 @@ export default function AgendarCitasNew() {
                 console.log(HorasDis)
                 // setArrayCitas(citas)
               } else {
-                setHoraDisponible([])
-                setDias([])
-                setHorasDis([])
+                setHoraDisponible(Horarios[0].horas)
+                setDias(Horarios[0].horas)
+                setHorasDis(Horarios[0].horas)
                 console.log("no hay info")
               }
             });
