@@ -89,6 +89,7 @@ export default function AgendarCitasNew() {
           let datos = doc.data()
           datos.$key = doc.id
           Horarios.push(datos);
+          console.log(datos)
         });
         if (Horarios.length > 0) {
           db.collection("Citas").where("uid_especialista", "==", id).where("fecha","==", e)
