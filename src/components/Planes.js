@@ -1,58 +1,131 @@
-import React, { useState,useEffect } from "react";
-import './Dashboard.css';
-import { faHome,faUser,faAmbulance,faReceipt,faBriefcaseMedical,faDollarSign,faClinicMedical,faNotesMedical,faCity,faHistory,faPowerOff,faBars,faSearch,faBell,faCommentAlt,faSmile,faGift,faIdBadge,faCalendar} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {  Alert } from "react-bootstrap"
-
+import React from "react";
 
 export default function Planes() {
- 
+
   return (
-    <>
-    <body>
-        <main>
-            <h2 className="dash-title">Elige tu plan</h2>
+    <div>
+            <h1 className="dash-title text-center mb-5">Planes Psicólogo</h1>
             <div className="dash-cards">
-                <div className="card-single text-center">
+                <div className="card-single_planes text-center">
                     <div className="card-body">
                         <div>
-                            <h5>Clasico</h5>
-                            <h1>10$</h1>
-                            <label>1 semana</label>
+                        <div id="stars"><div></div></div>
+                            <h3 className="mb-3" id="titleBasico">Plan Básico</h3>
+                            <div>
+                            <h1 className="mb-5" >$10</h1>
+                            </div>
+                            
+                            <div className="mb-3">
+                            5% de descuento en las siguientes 4 consultas y/o emergencias.
+                            </div>
+                            <div className="mb-5 " >
+                                <button id="buttonPlanes" href="">Elegir</button>
+                            </div>
                         </div>
-                    </div>
-                    <div className="card-footer">
-                        <a href="">Elegir</a>
                     </div>
                 </div>
-                <div className="card-single text-center">
+                <div className="card-single_planes text-center" >
                     <div className="card-body">
-                        <div>
-                            <h5>Avanzado</h5>
-                            <h1>20$</h1>
-                            <label>2 semanas</label>
+                        <div className="text-center">
+                        <div id="starsEstandar"><div></div></div>
+                            <h3 className="mb-3 " id="titleEstandar" >Plan Estándar</h3>
+                            <div>
+                            <h1 className="mb-5" >$20</h1>
+                            </div>
+                            <div className="mb-3">
+                            7% de descuento en las siguientes 12 consultas y/o emergencias.
+                            </div>
+                            <div className="mb-5 " >
+                                <button id="buttonPlanes" href="">Elegir</button>
+                            </div>
                         </div>
-                    </div>
-                    <div className="card-footer">
-                        <a href="">Elegir</a>
                     </div>
                 </div>
-                <div className="card-single text-center">
+                <div className="card-single_planes text-center" >
                     <div className="card-body">
                         <div>
-                            <h5>Premiun</h5>
-                            <h1>50$</h1>
-                            <label>1 Mes</label>
+                        <div id="starsPremiun"><div></div></div>
+                            <h3 className="mb-3" id="titlePremiun">Plan Premium</h3>
+                            <div>
+                            <h1 className="mb-5" >$30</h1>
+                            </div>
+                            <div className="mb-3">
+                            10% de descuento en las siguientes 24 consultas y/o emergencias.
+                            </div>
+                            <div className="mb-5 " >
+                                <button id="buttonPlanes" href="">Elegir</button>
+                            </div>
                         </div>
-                    </div>
-                    <div className="card-footer">
-                        <a href="">Elegir</a>
                     </div>
                 </div>
             </div> 
-        </main>
-    
-</body>
-    </>
+            <h1 className="dash-title text-center">Planes Psiquiatras</h1>
+            <div className="dash-cards">
+                <div className="card-single_planes text-center">
+                    <div className="card-body">
+                        <div>
+                            <div id="stars"><div></div></div>
+                            <h3 className="mb-3" id="titleBasico">Plan Básico</h3>
+                            <div>
+                            <h1 className="mb-5" >$10</h1>
+                            </div>
+                            
+                            <div className="mb-3">
+                               5% de descuento en las siguientes 4 consultas y/o emergencias.
+                            </div>
+                            <div className="mb-3">
+                                5% de descuento en traslado de récipe durante un mes.
+                            </div>
+                            <div className="mb-5 " >
+                                <button id="buttonPlanes" href="">Elegir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="card-single_planes text-center">
+                    <div className="card-body">
+                        <div>
+                            <div id="starsEstandar"><div></div></div>
+                            <h5 className="mb-3" id="titleEstandar" >Plan Estándar</h5>
+                            <div>
+                            <h1 className="mb-5" >$20</h1>
+                            </div>
+                            
+                            <div className="mb-3">
+                                7% de descuento en las siguientes 12 consultas y/o emergencias.
+                            </div>
+                            <div className="mb-3">
+                                10% de descuento en traslado de récipe durante tres meses.
+                            </div>
+                            <div className="mb-5 " >
+                                <button id="buttonPlanes" href="">Elegir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="card-single_planes text-center" >
+                    <div className="card-body">
+                        <div>
+                            <div id="starsPremiun"><div></div></div>
+                            <h3 className="mb-3" id="titlePremiun">Plan Premium</h3>
+                            <div>
+                            <h1 className="mb-5" >$30</h1>
+                            </div>
+                            
+                            <div className="mb-3">
+                                10% de descuento en las siguientes 24 consultas y/o emergencias.
+                            </div>
+                            <div className="mb-3">
+                                15% de descuento en el traslado del récipe durante seis meses.
+                            </div>
+                            <div className="mb-5 " >
+                                <button id="buttonPlanes" href="">Elegir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+            </div> 
+    </div>
   )
 }

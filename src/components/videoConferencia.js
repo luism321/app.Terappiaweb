@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from "react";
 import {  useHistory,Link } from "react-router-dom";
 import './Dashboard.css';
-import { faHome,faUser,faAmbulance,faPhone,faBusinessTime,faClinicMedical,faPowerOff,faBars,faGift,faIdBadge,faCalendar, faUserEdit} from "@fortawesome/free-solid-svg-icons";
+import { faHome,faUser,faAmbulance,faBusinessTime,faClinicMedical,faPowerOff,faBars,faGift,faIdBadge,faCalendar, faUserEdit} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {  Alert } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext";
@@ -10,11 +10,15 @@ import firebase from "../firebase"
 
 
 
-export default function Agendas() {
+export default function Video() {
     const [error, setError] = useState("");
     const history = useHistory()
     const { currentUser,logout } = useAuth();
     const [currentDatos, setcurrenDatos ] = useState();
+    const [UpdateProfilePa,setFirstUpda] = useState("")
+    const [firtMain,setFirstMain] = useState(true)
+    const [firtinforme,setFirstinforme] = useState(true)
+    const [currentPerfil, setCurrentPerfil] = useState("");
     
     
 
@@ -45,10 +49,23 @@ db.collection("Usuarios").doc(currentUser.uid).update({
 }
 }
 const [currentDatosPaDe, setLinks ] = useState([]);
+const [currentId, setCurrentId] = useState("");
+const [MostrarDiv, setMostrar] = useState(true);
 
 
+if(currentId!==""){
+db.collection("Usuarios")
+                .doc(currentId)
+                .get().then(function (doc) {
+                    let users = doc.data()
+                    setCurrentPerfil(users);
+                   }).catch(function (error) {
+                       console.log("Error getting User:", error);
+                       alert(error);
+                   });
+}
 const getLinks = async () => {
-    db.collection("Usuarios").where("tipouser","==","Paciente").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("TipoUser","==","Paciente").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data(), id: doc.id });
@@ -74,8 +91,40 @@ const getLinks = async () => {
   }
   
 
+
+    const jitsiContainerStyle = {
+        width: '100%',
+        height: '100%',
+      }
+    const clMedicalal = () =>{
+        
+        const domain = 'meet.jit.si';
+        const options = {
+             roomName: 'roomName',
+             height: 400,
+             parentNode: document.getElementById('jitsi-container'),
+             interfaceConfigOverwrite: {
+              filmStripOnly: false,
+              SHOW_JITSI_WATERMARK: false,
+             },
+        }
+    setFirstinforme(false)
+
+        const api = new window.exports.JitsiMeetExternalAPI(domain, options);
+        api.executeCommand('displayName', 'MyName');
+    };
+
+
+function Mostrar(e){
+    if(e=true){
+    setMostrar(false)
+}
+
+}
+
   return (
-    <div>
+    <>
+    <body>
     {error && <Alert variant="danger">{error}</Alert>}
       <input type="checkbox" id="sidebar-toggle"/>
     <div className="sidebar">
@@ -163,51 +212,53 @@ const getLinks = async () => {
             
         </header>
         <main>
-        <h2 className="dash-title_2 b"><h1>Emergencias</h1></h2>
-            <div className="dash-cards_1">
-                <div className="card-single">
-                    <div className="card-body">
-                    <div>
-                        <label>Paciente:</label>
-                        <h5>Manuel alvares</h5>
-                        <label></label>
-                            <h4>Urgente</h4>
+        <div className="text-center">
+          <button onClick={clMedicalal} onClickCapture={(e)=>{Mostrar(true,e)}}>Ir a Conferencia</button>
+        </div>
+        
+        <div id="jitsi-container" style={jitsiContainerStyle}/>
+        {MostrarDiv===false?
+        <section  className="contact_info_area sec_pad bg_color">
+                <div className="container">
+                    <div className="row">
+                        <div className="contact_form col-lg-9">
+                            <h2 className="f_p f_size_22 t_color3 f_600 l_height28 mb_40">Informe de consulta</h2>
+                            <form  className="contact_form_box" method="post" id="contactForm">
+                                <div className="row">
+                                    <div className="col-lg-12">
+                                        <div className="form-group text_box">
+                                            <input type="text" id="name" name="name" placeholder="Nombres"/>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-12">
+                                        <div className="form-group text_box">
+                                            <input type="text" id="subject" name="subject" placeholder="Descripción" />
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-12">
+                                        <div className="form-group text_box">
+                                            <textarea  name="message" id="message" cols="30" rows="10" placeholder="Redactar informe . . ."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" className="btn_three">Guardar informe</button>
+                            </form>
+                            {/* {emailStatus ? emailStatus : null} */}
+                            <div id="success">Tu mensaje a sido enviado con exito!</div>
+                            <div id="error">¡Opps! Hay algo mal. Inténtalo de nuevo</div>
                         </div>
                     </div>
-                    <div className="card-footer">
-                        <a href=""><FontAwesomeIcon icon={faPhone}/></a>
-                    </div>
                 </div>
-                <div className="card-single">
-                    <div className="card-body">
-                        <div>
-                            <label>Paciente:</label>
-                            <h5>Manuel alvares</h5>
-                            <label></label>
-                            <h4>Urgente</h4>
-                        </div>
-                    </div>
-                    <div className="card-footer">
-                    <a href=""><FontAwesomeIcon icon={faPhone}/></a>
-                    </div>
-                </div>
-                <div className="card-single">
-                    <div className="card-body">
-                    <div>
-                        <label>Paciente:</label>
-                            <h5>Manuel alvares</h5>
-                            <label></label>
-                            <h4>Urgente</h4>
-                        </div>
-                    </div>
-                    <div className="card-footer">
-                    <a href=""><FontAwesomeIcon icon={faPhone}/></a>
-                    </div>
-                </div>
-            </div> 
+            </section>
+
+            :<span></span>
+            }
+          
         </main>
-    
-</div>  
-</div>
+       
+       
+    </div>
+</body>
+    </>
   )
 }

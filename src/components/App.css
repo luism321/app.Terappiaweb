@@ -6,6 +6,17 @@
     border-radius: 100px;
     color: aliceblue;
 }
+.selectEspe{
+    border: solid 1px #837BEC;
+    width: 100%;
+    padding: 10px 11px;
+    box-shadow: 0 4px 8px 0 rgba(179, 80, 236, 0.2), 0 6px 20px 0 rgba(73, 41, 255, 0.19);
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 255, 221, 0.2), 0 6px 20px 0 rgba(146, 30, 255, 0.19);
+    -moz-box-shadow: 0 4px 8px 0 rgba(0, 255, 221, 0.2), 0 6px 20px 0 rgba(20, 239, 255, 0.19);
+    border-radius: 5px;
+    color:  #837BEC;
+   
+}
 
 .user_card {
     height: 100%;
@@ -109,6 +120,10 @@
     color: white !important;
     border: 0 !important;
     border-radius: 0.25rem 0 0 0.25rem !important;
+}
+.cerrar{
+    color:red;
+    cursor: pointer;
 }
 .input-group-text label {
     color: #ffffff!important;

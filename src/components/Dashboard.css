@@ -28,6 +28,100 @@
     color: rgb(255, 255, 255);
     transition: width 500ms;
 }
+#imagen{
+    text-align: center;
+}
+.td-team{
+    cursor: pointer;
+}
+
+#color_1{
+background: #ff3232;
+color: #FFF;
+}
+#color_2{
+    background: #32f8ff;
+    color: #FFF;
+    }
+#color_3{
+    background: #ffe032;
+    color: #FFF;
+}
+/*  ---------------  tooglee        --------------*/
+.switchBtn {
+    margin: auto;
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 40px;
+    margin-top: 15px;
+}
+.switchBtn input {display:none;}
+.slide {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    padding: 5px;
+    color: #fff;
+}
+.slide.round {
+    border-radius: 34px;
+}
+.slide.round:before {
+    border-radius: 50%;
+}
+#buttonPlanes{
+width: 70%;
+background: #8390a200;
+color: rgb(0, 0, 0);
+border-color: black;
+}
+#titleBasico{
+    color:rgb(101, 224, 198)  ;
+}
+#titleEstandar{
+    color:rgb(0, 102, 255);
+}
+#titlePremiun{
+    color:rgb(143, 82, 255) ;
+}
+
+.slide:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 30px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+input:checked + .slide {
+    background-color: #00ff0d;
+    padding-left: 40px;
+}
+input:focus + .slide {
+    box-shadow: 0 0 1px #01aeed;
+}
+input:checked + .slide:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+    left: -20px;
+}
+
+
+/*  ---------------  tooglee        --------------*/
+#colorTitle{
+    color: #FFF;
+}
  #ig{
     height: 50px;
     width: 150px;
@@ -109,7 +203,7 @@ header{
     z-index: 100;
     width: calc(100% - 255px);
     background: #FFF;
-    height: 80px;
+    height: 60px;
     padding: 0rem 1rem;
     display: flex;
     align-items: center;
@@ -145,7 +239,7 @@ header{
 }
 
 main{
-    margin-top:80px ;
+    margin-top:60px ;
     background: #f1f5f9;
     min-height: 90hv;
     padding: 1rem 3rem;
@@ -161,6 +255,15 @@ main{
     margin-bottom: 1rem;
     
 }
+.select_Servi{
+width: 100px;
+margin-left: 0.5rem;
+padding: 10px 10px;
+border:solid 1px  #837BEC ; 
+border-radius: 15px;
+margin-bottom: 2rem;
+}
+
 .dash-cards{
     display: grid;
     grid-template-columns:repeat(3,1fr) ;
@@ -180,24 +283,60 @@ main{
     -webkit-box-shadow: 0 4px 8px 0 rgba(0, 255, 221, 0.2), 0 6px 20px 0 rgba(146, 30, 255, 0.19);
     -moz-box-shadow: 0 4px 8px 0 rgba(0, 255, 221, 0.2), 0 6px 20px 0 rgba(20, 239, 255, 0.19);
 }
-.card-body{
-    padding: 1.3rem 1rem;
-    display: flex;
-    align-items: center;
+#stars div{
+    height: 135px;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url("/src/img/Star1.png");
 }
+#starsEstandar div{
+    height: 135px;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url("/src/img/Star2.png");
+}
+.validarInput{
+    color: red;
+}
+#starsPremiun div{
+    height: 135px;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url("/src/img/star3.png");
+}
+.card-single_planes{
+    margin-bottom: 1rem;
+    background: rgb(221, 221, 221);
+    border-radius: 7px;
+    box-shadow: 0 4px 8px 0 rgba(179, 80, 236, 0.2), 0 6px 20px 0 rgba(73, 41, 255, 0.19);
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 255, 221, 0.2), 0 6px 20px 0 rgba(146, 30, 255, 0.19);
+    -moz-box-shadow: 0 4px 8px 0 rgba(0, 255, 221, 0.2), 0 6px 20px 0 rgba(20, 239, 255, 0.19);
+}
+.hidden-check1 {
+    display: none;  
+    }
+  
+  .hidden-check2 {
+    visibility: hidden;
+  }
+
+  #div{
+      float: right;
+      height: 100%;
+  }
 
 .card-body #A-1 ,
 .card-body #A-2,
 .card-body #A-3 {
-    font-size: 1rem;
-    padding-right: 2rem;
     padding: 2rem;
     height: 35px;
     width: 35px;
     background-size: cover;
     background-repeat: no-repeat;
-   
-    border-radius: 50%;
+    border-radius: 20%;
 }
 #A-1{
     background-image: url("../img/descarga.jpg");
@@ -208,8 +347,18 @@ main{
 #A-3{
     background-image: url("../img/descarga\ \(1\).jpg");
 }
+
+#ini{
+    cursor: pointer;
+}
+#cerrarAler{
+    margin-left: 100px;
+}
+#sidebar{
+    cursor: pointer;
+}
 .card-body  h5{
-    font-size: 1.2rem;
+    font-size: 1rem;
     color:var(--text-grey);
    
 }
@@ -235,8 +384,31 @@ main{
     grid-template-columns: 75% 25%;
     grid-column-gap: 1.5rem;
 }
+
+.activity-grip_1{
+    height: 100%;
+    width: 100%;
+    background: rgb(255, 254, 254);
+    margin-left: 2rem;
+    border-radius: 5px;
+}
+.hora{
+    margin-left: 10rem;
+}
+.activity-grip_2{
+    height: 320px;
+    width: 220px;
+    background: rgb(255, 254, 254);
+    text-align: center;
+    margin-left: 2rem;
+    border-radius: 5px;
+}
+.input{
+    margin-bottom: 0.5rem;
+}
 .bday-card,
 .summary-card,
+.activity-card,
 .activity-card{
     background: #FFF;
     border-radius: 7px;
@@ -350,6 +522,17 @@ tbody tr:nth-child(even)
 }
 .text-center span{
     padding-right: .2rem;
+}
+#boton{
+    text-align: center;
+}
+.botonA button{
+    text-align: center;
+    background: linear-gradient(153deg, rgb(72, 232, 231,1) 2%, #837BEC 70%);
+    color: #FFF;
+    border: 1px solid var(--main-color);
+    border-radius: 4px;
+    padding: .4rem 1rem;
 }
 .text-center button{
     background: linear-gradient(153deg, rgb(72, 232, 231,1) 2%, #837BEC 70%);

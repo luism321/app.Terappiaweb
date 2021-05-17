@@ -13,7 +13,7 @@ function Login() {
 	const [error, setError] = useState("")
 	const [Exito, setExito] = useState("")
 	const [loading, setLoading] = useState(false)
-	const history = useHistory()
+	const history = useHistory("")
 
 
 	
@@ -30,11 +30,11 @@ function Login() {
 	db.collection("Usuarios")
 	.doc(user.uid)
 	.get().then( (doc)=> {
-			if(doc.data().TipoUSer==="Paciente"){
+			if(doc.data().tipouser==="Paciente"){
 				setExito("Iniciando")
 				history.push("/")
-			  } 
-			  if(doc.data().TipoUSer==="Especialista" ){
+			  }
+			  else if(doc.data().tipouser==="Especialista" ){
 				setExito("Iniciando")
 				history.push("/DashboardEs")
 			}	

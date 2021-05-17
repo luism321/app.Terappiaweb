@@ -1,32 +1,55 @@
-import React, { useRef, useState } from "react"
+import React, { useRef, useState,useEffect } from "react"
 import {  Alert } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext"
-import { Link, useHistory } from "react-router-dom"
+import {  useHistory} from "react-router-dom"
 import {db} from "../firebase"
 
-export default function UpdateProfile() {
+
+export default function UpdateProfilePa() {
   const emailRef = useRef()
   const passwordRef = useRef()
   const passwordConfirmRef = useRef()
+  const { logout } = useAuth("");
   const { currentUser, updatePassword, updateEmail } = useAuth()
   const [error, setError] = useState("")
-  const [Exito, setExito] = useState("")
+  const [input, setErrorInput] = useState("")
   const [loading, setLoading] = useState(false)
-  const history = useHistory()
-  const [DatosNombre, setDatos ] = useState();
-  const [upPaciente,setupPaciente] = useState();
+  const history = useHistory("")
+  const [DatosNombre, setDatos ] = useState("");
+  const [Exito, setExito] = useState("")
+  const [Email,setEmail]=useState("")
+  const [Nombres,setNombres]=useState("")
+  const [Cedula,setCedula]=useState("")
+  const [Edad,setEdad]=useState("") 
+  const [Sexo,setSexo]=useState("") 
+  const [Pais,setPais]=useState("") 
+  const [Ciudad,setCiudad]=useState("") 
+  const [Direccion,setDireccion]=useState("") 
+  const [Religion,setReligion]=useState("") 
+  const [numeroPri,setnumeroPri]=useState("") 
+  const [numeroSe,setnumeroSe]=useState("") 
+  const [Apellidos,setApellidos]=useState("")
+  const [show, setShow] = useState(true);
+  
 
-  db.collection("Usuarios")
-  .doc(currentUser.uid)
-  .get().then((doc) => {
-          let users = doc.data()
-          setDatos(users.Nombres);
-          setupPaciente(users.TipoUSer)
-  }).catch(function (error) {
-      console.log("Error getting User:", error);
-      alert(error);
-  });
-
+  
+  useEffect(() => {
+    const TraerDatos = () => {
+    db.collection("Usuarios")
+      .doc(currentUser.uid)
+      .get().then((doc) => {
+              if(doc.exists){
+                let users=doc.data()
+              setDatos(users);
+            } 
+      }).catch(function (error) {
+          console.log("Error getting User:", error);
+          alert(error);
+      });
+    };
+    TraerDatos();
+    }, []);
+  
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -34,21 +57,36 @@ export default function UpdateProfile() {
       return setError("Passwords do not match")
     }
 
-    const promises = []
+    const promisesPa = []
     setLoading(true)
     setError("")
 
+    db.collection("Usuarios").doc(currentUser.uid).update({
+      "nombres":Nombres,
+      "apellidos":Apellidos,
+      "cedula":Cedula,
+      "edad":Edad,
+      "correo":Email,
+      "sexo":Sexo,
+      "pais":Pais,
+      "ciudad":Ciudad,
+      "direccion":Direccion,
+      "religion":Religion,
+      "num_principal":numeroPri,
+      "num_secundario":numeroSe,
+    })
+
     if (emailRef.current.value !== currentUser.email) {
-      promises.push(updateEmail(emailRef.current.value))
+      promisesPa.push(updateEmail(emailRef.current.value))
     }
     if (passwordRef.current.value) {
-      promises.push(updatePassword(passwordRef.current.value))
+      promisesPa.push(updatePassword(passwordRef.current.value))
     }
 
-    Promise.all(promises)
+    Promise.all(promisesPa)
       .then(() => {
-        history.push("/")
-        setExito("Actualizado con exito")
+        history.push("/Update")
+        setExito("Actualizado con éxito")
       })
       .catch(() => {
         setError("No se pudo actualizar la cuenta")
@@ -58,46 +96,92 @@ export default function UpdateProfile() {
       })
   }
 
+  function handlkeyPress(){
+  var ele = document.querySelectorAll('#validanumericos')[0];
+  var ele_2 = document.querySelectorAll('#validanumericos_2')[0];
+  ele.onkeypress = function(e) {
+     if(isNaN(this.value+String.fromCharCode(e.charCode))){
+     setErrorInput("En este campo solo es permitido numeros")
+    return false;
+  }
+  }
+  ele.onpaste = function(e){
+     e.preventDefault();
+  }
+  ele_2.onkeypress = function(e) {
+    if(isNaN(this.value+String.fromCharCode(e.charCode))){
+    setErrorInput("En este campo solo es permitido numeros")
+   return false;
+ }
+ }
+ ele_2.onpaste = function(e){
+    e.preventDefault();
+ }
+}   
+
+    
   return (
     <>
-  <main>
-    <div className="container h-100 ">
-		<div className="d-flex justify-content-center h-100">
-			<div className="user_card">
-      <div className="d-flex justify-content-center">
-						<img src="Terappia-2.png" className="brand_logo" alt="Logo"/>
-				</div>
-          <div className="text-center mb-5 a" ><h1 >Actualizar Perfil</h1></div>
+    
+  <div className="text-center a" ><h1 >Actualizar Perfil</h1></div>
+  <section className="contact_info_area sec_pad bg_color">
+      <div className="container">
+          <div className="row">
+          <div className="contact_form col-lg-12">
           {error && <Alert variant="danger">{error}</Alert>}
           <form onSubmit={handleSubmit}>
-            <div className="form-group" id="email">
+          <div className="container">
+          <div className="row">
+          <div className="contact_form col-lg-12">
+          <div className="form-group" id="email">
+              <label><b>Foto:</b></label>
+              <br/>
+              {/*<progress value={state.uploadValue} max='100'></progress>*/ }
+              <input className="form-control"
+                name='foto'
+                type='file'
+              />
+            </div>
+          <div className="form-group" id="email">
               <label><b>Nombres:</b></label>
               <input className="form-control"
-                type=""
-                
-                defaultValue={DatosNombre}
-
+                type="text"
+                onInput={(e)=>setNombres(e.target.value)}
+                defaultValue={DatosNombre.nombres}
               />
+              
+            </div>
+            <div className="form-group" id="email">
+              <label><b>Apellidos:</b></label>
+              <input className="form-control"
+                 type="text"
+                onInput={(e)=>setApellidos(e.target.value)}
+                defaultValue={DatosNombre.apellidos}
+              />
+              
             </div>
             <div className="form-group" id="email">
               <label><b>Cédula:</b></label>
               <input className="form-control"
-                type=""
-               
+                 type="text"
+                 defaultValue={DatosNombre.cedula}
+                onChange={(e)=>setCedula(e.target.value)}
                 placeholder="Agregue su Cedula de identidad"
               />
             </div>
             <div className="form-group" id="email">
               <label><b>Edad:</b></label>
               <input className="form-control"
-                type=""
+              defaultValue={DatosNombre.edad}
+                 type="text"
+                onChange={(e)=>setEdad(e.target.value)}
                 placeholder="Agregue su edad"
               />
             </div>
             <div className="form-group" id="email">
               <label><b>sexo:</b></label>
-              <select type="select" className="form-control">
-                <option>seleccionar</option>
+              <select type="select" className="form-control" onChange={(e)=>setSexo(e.target.value)}>
+                <option value={DatosNombre.sexo}>{DatosNombre.sexo}</option>
                 <option value="Masculino">Masculino</option>
                 <option value="Femenino">Femenino</option>
                 <option value="Otro">Otro</option>
@@ -105,68 +189,77 @@ export default function UpdateProfile() {
             </div>
             <div className="form-group" id="email">
               <label><b>País:</b></label>
-              <select type="select" className="form-control">
-                <option>seleccionar</option>
+              <select type="select" className="form-control" onChange={(e)=>setPais(e.target.value)}>
+                <option>{DatosNombre.pais}</option>
                 <option value="Venezuela">Venezuela</option>
                 <option value="Argentina">Argentina</option>
                 <option value="Peru">Peru</option>
                 <option value="Chile">Chile</option>
+                <option value="Panama">Panama</option>
+                <option value="Mexico">Mexico</option>
+                <option value="Ecuador">Ecuador</option>
+                <option value="Salvador">Salvador</option>
+                <option value="Costa rica">Costa rica</option>
+                <option value="Dominicana">Dominicana</option>
+                <option value="Puerto rico">Puerto rico</option>
+                <option value="Guatemala">Guatemala</option>
+                <option value="Brasil">Brasil</option>
+                <option value="Colombia">Colombia</option>
               </select>
             </div>
             <div className="form-group" id="email">
               <label><b>Ciudad:</b></label>
               <input className="form-control"
-                type=""
-                
+                 type="text"
+                onChange={(e)=>setCiudad(e.target.value)}
                 placeholder="Ciudad"
+                defaultValue={DatosNombre.ciudad}
               />
             </div>
             <div className="form-group" id="email">
               <label><b>Dirreción:</b></label>
               <textarea className="form-control"
-                type=""
-                
+                 type="text"
+                onChange={(e)=>setDireccion(e.target.value)}
                 placeholder="Agregar dirección"
+                defaultValue={DatosNombre.direccion}
               />
             </div>
             <div className="form-group" id="email">
-              <label><b>Religion:</b></label>
-              <select type="select" className="form-control">
-                <option>seleccionar</option>
-                <option value="Catolico">Catolico</option>
-                <option value="Cristiano">Cristiano</option>
-                <option value="Ateismo">Ateismo</option>
-                <option value="Otro">Otro</option>
-              </select>
-            </div>
+                <label><b>Religion:</b></label>
+                <select type="select" className="form-control" onChange={(e)=>setReligion(e.target.value)}>
+                  <option>{DatosNombre.religion}</option>
+                  <option value="Catolico">Catolico</option>
+                  <option value="Cristiano">Cristiano</option>
+                  <option value="Ateismo">Ateismo</option>
+                  <option value="Otro">Otro</option>
+                </select>
+              </div>
             <div className="form-group" id="email">
             <label><b>Numero principal:</b></label>
-            <div className="form-inline">
               <input className="form-control col-3"
-                type=""
-                
-                placeholder="+58"
+                type="text"
+                name="codigo"
+                id="validanumericos"
+                defaultValue={DatosNombre.num_principal}
+                onChange={(e)=>setnumeroPri(e.target.value)}
+                placeholder="+58 Numero Telefonico"
+                onKeyPress={handlkeyPress}
               />
-                <input className="form-control col-9"
-                  type=""
-                  placeholder="Numero Telefonico"
-                  
-                />
-              </div>
+              {input && <div className="validarInput">{input}</div>}
               </div>
             <div className="form-group" id="email">
               <label><b>Numero Secundario:</b></label>
-              <div className="form-inline">
               <input className="form-control col-3"
-                type=""
-                placeholder="+58"
+              defaultValue={DatosNombre.num_secundario}
+              name="codigo"
+              type="text"
+              id="validanumericos_2"
+              onChange={(e)=>setnumeroSe(e.target.value)}
+              placeholder="+58 Numero Telefonico"
+              onKeyPress={handlkeyPress}
               />
-                <input className="form-control col-9"
-                  type=""
-                  placeholder="Numero Telefonico Secundario"
-                  
-                />
-              </div>
+              {input && <div className="validarInput">{input}</div>}
             </div>
             <div className="form-group" id="email">
               <label><b>Correo:</b></label>
@@ -174,18 +267,19 @@ export default function UpdateProfile() {
                 type="email"
                 ref={emailRef}
                 required
+                onInput={(e)=>setEmail(e.target.value)}
                 defaultValue={currentUser.email}
               />
             </div>
             <div className="form-group" id="password">
-              <label><b>Contrseña:</b></label>
+              <label><b>Contraseña:</b></label>
               <input className="form-control"
                 type="password"
                 ref={passwordRef}
                 placeholder="Dejar en blanco para mantener la misma"
               />
             </div>
-            <div className="form-group" id="password-confirm">
+            <div className="form-group mb-5" id="password-confirm">
               <label><b>Confirmar contraseña:</b></label>
               <input className="form-control"
                 type="password"
@@ -193,15 +287,30 @@ export default function UpdateProfile() {
                 placeholder="Dejar en blanco para mantener la misma"
               />
             </div>
-            <button id="especialista" disabled={loading} className="btn btn-primary btn-block" type="submit">
+            <button id="especialista" disabled={loading} className="btn btn-primary btn-block mb-5 mt-5" type="submit">
               Actualizar
             </button>
+            <div>{Exito && 
+            <Alert show={show} variant="success">
+            <Alert.Heading className="text-center">{Exito}</Alert.Heading>
+            <hr />
+            <div className="d-flex justify-content-end">
+              <button className="btn btn" onClick={() => setShow(false)} variant="outline-success">
+                Cerrar X
+              </button>
+            </div>
+          </Alert>
+            }
+            </div>
+          </div>
+       </div>
+       </div>
           </form>
-        </div>
-      </div>
-      </div>
-      </main>
-
-    </>
+          </div>
+       </div>
+       </div>
+            </section>
+      
+      </>
   )
 }

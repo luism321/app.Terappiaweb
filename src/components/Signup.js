@@ -7,31 +7,21 @@ import "./Signup.css"
 import './TipoUser.css';
 
 const Signup = () => {
-  const [TipoUSer,setTipoUser]=useState("")
+  const [TipoUser,setTipoUser]=useState("")
   const [Especialista,setEspecialista]=useState("")
   const [Nombres,setNombres]=useState("")
-  const [Cedula,setCedula]=useState("")
-  const [Edad,setEdad]=useState("") 
-  const [Sexo,setSexo]=useState("") 
-  const [Pais,setPais]=useState("") 
-  const [Ciudad,setCiudad]=useState("") 
-  const [Direccion,setDireccion]=useState("") 
-  const [Religion,setReligion]=useState("") 
-  const [numeroPri,setnumeroPri]=useState("") 
-  const [numeroSe,setnumeroSe]=useState("") 
-  const [numeroCod,setnumeroCod]=useState("") 
-  const [numeroCod_2,setnumeroCod_2]=useState("")  
+  const [Apellidos,setApellidos]=useState("")
   const [Email,setEmail]=useState("")
   const [Password,setPassword]=useState("")
   const passwordRef = useRef()
   const passwordConfirmRef = useRef()
   const [error, setError] = useState("")
-  const [Exito, setExito] = useState("")
   const [loading, setLoading] = useState(false)
-  const history = useHistory()
+  const history = useHistory("")
   const [userPA, setUserPa] = useState('');
   const [userEs, setUserEs] = useState('');
   const [firstContainer,setFirstContainer] = useState(true)
+  
   
   
   async function handleSubmit(e) {
@@ -46,28 +36,23 @@ const Signup = () => {
       .then((userCredential) => {
         var user = userCredential.user.uid;
       db.collection("Usuarios").doc(user).set({
-        TipoUSer:TipoUSer,
-        Especialista:Especialista,
-        Nombres:Nombres,
-        Cedula:Cedula,
-        Edad:Edad,
-        Sexo:Sexo,
-        Pais:Pais,
-        Ciudad:Ciudad,
-        Direccion:Direccion,
-        Religion:Religion,
-        numeroPri:numeroCod+numeroPri,
-        numeroSe:numeroCod_2+numeroSe,
+        tipouser:TipoUser,
+        especialista:Especialista,
+        nombres:Nombres,
+        apellidos:Apellidos,
+        correo:Email,
+        uid:user,
       })
     })
       .catch((error)=>{
         alert(error.message)
       })
-      if(TipoUSer==="Paciente"){
-      history.push("/Service")}
-      else if(TipoUSer==="Especialista"){
-        setExito("Especialista agregado con exito")
-        history.push("/DashboardEs")}
+      if(TipoUser==="Paciente"){
+      history.push("/Service")
+    }
+      if(TipoUser==="Especialista"){
+        history.push("/DashboardEs")
+      }
     } catch {
       setError("No se pudo crear una cuenta el correo que intenta registrar ya existe en terappiaweb")
     }
@@ -111,7 +96,7 @@ const Signup = () => {
 				</div>
       
           <div id="Pacientes"> 
-              <button id="Pacientes"  className="btn btn-danger btn-block mb-5" onClick={  (e) => onclickpa('Paciente', e)}  id="pacientes" value="Paciente" type="button">
+              <button  className="btn btn-danger btn-block mb-5" onClick={  (e) => onclickpa('Paciente', e)}  id="pacientes" value="Paciente" type="button">
                 Paciente
               </button>
           </div> 
@@ -131,7 +116,7 @@ const Signup = () => {
         </div>
       </div>
     </div>
-    :<a></a>
+    :<span></span>
   }
 { userPA==='Paciente'  ?
   <div className="container h-100 ">
@@ -143,15 +128,25 @@ const Signup = () => {
           {error && <Alert variant="danger">{error}</Alert>}
           <form onSubmit={handleSubmit} className="miformulario">      
           <div className="form-group" id="email">
-            <b> <label>Nombres y Apellidos:</label></b>
-            <input type="hidden" value={TipoUSer} id="TipoUser"  name="TipoUser" onInput={e => setTipoUser(e.target.value)} >
+            <b> <label>Nombres:</label></b>
+            <input type="hidden" value={TipoUser} id="TipoUser"  name="TipoUser" onInput={e => setTipoUser(e.target.value)} >
             </input>
               <input
                 className="form-control"
                 type="text"
-                placeholder="Introduzca sus nombres  completos"
-                value={Nombres}
+                placeholder="Introduzca sus Nombres  completos"
                 onChange={(e)=>setNombres(e.target.value)}
+              />
+            </div>
+            <div className="form-group" id="email">
+            <b> <label>Apellidos:</label></b>
+            <input type="hidden" value={TipoUser} id="TipoUser"  name="TipoUser" onInput={e => setTipoUser(e.target.value)} >
+            </input>
+              <input
+                className="form-control"
+                type="text"
+                placeholder="Introduzca sus Apellidos completos"
+                onChange={(e)=>setApellidos(e.target.value)}
               />
             </div>
             <div className="form-group" id="email">
@@ -195,20 +190,28 @@ const Signup = () => {
             <b> <label>Especialidad:</label></b>
                 <select className="form-control" type="select" name="Especialista" value={Especialista} onChange={(e)=>setEspecialista(e.target.value)}>
                   <option>Seleccionar</option>
-                  <option>Psicologo</option>
+                  <option>Psicólogo</option>
                   <option>Psiquiatra</option>
-                  <option>Terapeuta</option>
                 </select>
             </div>
           <div className="form-group" id="email">
-            <b> <label>Nombres y Apellidos:</label></b>
-            <input type="hidden" value={TipoUSer} id="TipoUser" name="TipoUser"  ></input>
+            <b> <label>Nombres :</label></b>
+            <input type="hidden" value={TipoUser} id="TipoUser" name="TipoUser"  ></input>
               <input
                 className="form-control"
                 type="text"
-                placeholder="Introduzca sus nombres  completos"
-                value={Nombres}
+                placeholder="Introduzca sus Nombres  completos"
                 onChange={(e)=>setNombres(e.target.value)}
+              />
+            </div>
+            <div className="form-group" id="email">
+            <b> <label>Apellidos:</label></b>
+            <input type="hidden" value={TipoUser} id="TipoUser" name="TipoUser"  ></input>
+              <input
+                className="form-control"
+                type="text"
+                placeholder="Introduzca sus Apellidos  completos"
+                onChange={(e)=>setApellidos(e.target.value)}
               />
             </div>
             <div className="form-group" id="email">

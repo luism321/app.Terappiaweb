@@ -8,11 +8,9 @@ import { useAuth } from "../contexts/AuthContext";
 import {db} from "../firebase"
 import firebase from "../firebase"
 
-import moment from 'moment';
-moment.locale('es');
+
 
 export default function DashboardEs() {
-    
     const [error, setError] = useState("");
     const history = useHistory()
     const { currentUser,logout } = useAuth();
@@ -20,7 +18,7 @@ export default function DashboardEs() {
     const [UpdateProfilePa,setFirstUpda] = useState("")
     const [firtMain,setFirstMain] = useState(true)
     const [currentPerfil, setCurrentPerfil] = useState("");
-    const DiaHoy=moment().format("YYYY/MM/DD")
+    
     
     
 const datosPrici = async () => {
@@ -68,7 +66,7 @@ db.collection("Usuarios")
 }
 
 const getLinks = async () => {
-    db.collection("Citas").where("uid_especialista","==",currentUser.uid).onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("tipouser","==","Paciente").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data(), id: doc.id });
@@ -249,43 +247,7 @@ const getLinks = async () => {
             <p></p>
             )}
 
-
-        {firtMain=== true?
-        <main>
-            <h2 className="dash-title a"><h1>Consultas para hoy&nbsp;&nbsp; {DiaHoy}</h1></h2>
-            <div className="dash-cards">
-            {currentDatosPaDe.length ? (
-                currentDatosPaDe.map(array => (
-                <div className="card-single">
-                    <div className="card-body">
-                        <div className="container" id="A-1"></div>
-                        <div>
-                            <label>Paciente:</label>
-                            <h5>{array.nombres_paciente}&nbsp;&nbsp;{array.apellidos_paciente}</h5>
-                            <label>Hora:</label>
-                            <h4>{array.hora}</h4>
-                            <label>Estatus:</label>
-                            <h4>{array.estatus}</h4>
-                        </div>
-                    </div>
-                    <div className="card-footer">
-                        <Link to="/videoConferencia"><div className="text-center" id="ini">Iniciar consulta</div></Link>
-                    </div>
-                    <div className="card-footer">
-                        <di className="mr-3"><a href="">Reprogramar</a></di>
-                        <div className="mr-3"><a href="">Cancelar</a></div>
-                        <di className="mr-3"><a href="">Retomar cita</a></di>   
-                    </div>
-                    <div className="card-footer" id="ini">
-                        <div className="mr-3 text-center"  onClickCapture={() => setCurrentId(array.uid)} onClick={(e) => onOcultar("Ocultar",e)}>Ver paciente</div>
-                    </div>
-                </div>
-                        ))
-                        ) : (
-                          <p></p>
-                        )}
-        </div>
-            
+        <main>   
 <section className="recent">
     <div className="activity-grip">
     {tabla? (
@@ -305,9 +267,9 @@ const getLinks = async () => {
                 {currentDatosPaDe? (
                 currentDatosPaDe.map(array => (
                       <tr>
-                          <td>{array.nombres_paciente}</td>
+                          <td>{array.nombres}</td>
                           <td className="td-team">
-                            <div onClickCapture={() => setCurrentId(array.uid_paciente)} onClick={(e) => onOcultar1("Ocultar",e)}><div className="img-1"></div></div>
+                            <div onClickCapture={() => setCurrentId(array.uid)} onClick={(e) => onOcultar1("Ocultar",e)}><div className="img-1"></div></div>
                           </td>
                           <td><div>Ver Historia</div></td>
                       </tr>
@@ -364,9 +326,6 @@ const getLinks = async () => {
     </section>
 
         </main>
-        :
-        <span></span>
-     }
     </div>
 </body>
     </>
