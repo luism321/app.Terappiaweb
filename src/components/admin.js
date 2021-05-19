@@ -9,6 +9,7 @@ import { db } from "../firebase"
 import firebase from "../firebase"
 import 'moment/locale/es'
 import moment from 'moment';
+import { set } from "react-hook-form";
 
 
 
@@ -31,7 +32,7 @@ export default function Admin() {
         .doc(user.uid)
         .get().then(function (doc) {
           let users = doc.data()
-          setcurrenDatos(users.nombres); 
+          setcurrenDatos(users.nombres);
         });
     })
     db.collection("Usuarios").where("tipouser","==","Especialista").onSnapshot((querySnapshot) => {
@@ -45,10 +46,12 @@ export default function Admin() {
     
   }, []);
 
-
+  
+ const[estatus,setEstatus]=useState("")
   function aprobar(e){
+    console.log(estatus)
     db.collection("Usuarios").doc(e).update({
-      "aprobado":true,
+      "aprobado":estatus,
     }).then(() => {
       history.push("/Admin")
       setExito("Usuario aprobado")
@@ -68,6 +71,8 @@ export default function Admin() {
   function quitar(){
     setExito("")
   }
+
+
   return (
     <>
         {error && <Alert variant="danger">{error}</Alert>}
@@ -141,7 +146,7 @@ export default function Admin() {
                             <div ><div className="img-1"></div></div>
                           </td>
                           <td>Ver</td>
-                          <td><div onClick={(e)=>aprobar(array.uid,e)}><input type="checkbox"/></div></td>
+                          <td><div ><input id="check" type="checkbox"onClick={(e)=>aprobar(array.uid,e, setEstatus(e.target.checked))} checked={array.aprobado}/></div></td>
                       </tr>
                       )
                       )     
