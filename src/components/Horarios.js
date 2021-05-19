@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useHistory, Link } from "react-router-dom";
-import { faHome, faUser, faAmbulance, faPhone, faBusinessTime, faClinicMedical, faPowerOff, faBars, faGift, faIdBadge, faCalendar, faUserEdit } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faUser, faAmbulance, faEdit, faTrash, faBusinessTime, faClinicMedical, faPowerOff, faBars, faGift, faIdBadge, faCalendar, faUserEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Alert } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext";
@@ -25,12 +25,14 @@ const Horarios = () => {
   const [show, setShow] = useState(true);
   const [misHorarios, setMishorarios] = useState("");
   const [misDias, setMisDias] = useState("");
-  const arrayNew = misHorarios.horas
+  const [mensaje, setmensaje] = useState(true);
 
-  for (let i = 0; i < arrayNew; i++) {
-    setIdDia(arrayNew[i])
-  }
-console.log(IdDia)
+  const arrayNew = misHorarios
+
+  // for (let i = 0; i < arrayNew.length; i++) {
+  //   setIdDia(arrayNew[0])
+  // }
+ 
 
   const onCheckboxClicked = (id, isChecked, value) => {
     if (isChecked === true) {
@@ -74,7 +76,7 @@ console.log(IdDia)
           console.log("Error getting User:", error);
           alert(error);
         });
-      db.collection("Usuarios").doc(currentUser.uid).collection("Horarios").where("uid", "==", currentUser.uid).onSnapshot((querySnapshot) => {
+      db.collection("Usuarios").doc(currentUser.uid).collection("Horario").where("uid", "==", currentUser.uid).onSnapshot((querySnapshot) => {
         const docs = [];
         const docsDias = [];
         querySnapshot.forEach((doc) => {
@@ -164,12 +166,12 @@ console.log(IdDia)
   function ActualizarHorario(e) {
     let a = e
     if (a === "listo") {
-      db.collection("Usuarios").doc(currentUser.uid).collection("Horarios").doc(nuevoDaos).set({
+      db.collection("Usuarios").doc(currentUser.uid).collection("Horario").doc(nuevoDaos).set({
         dia: nuevoDaos,
         horas: nuevoDaosHora,
         uid: currentUser.uid
       })
-      db.collection('Horarios')
+      db.collection('Horario')
         .where("uid", '==', currentUser.uid)
         .get().then(Horario => {
           console.log(Horario);
@@ -177,6 +179,7 @@ console.log(IdDia)
         .then(() => {
           history.push("/Horarios")
           setExito("Su horario fue agregado con éxito")
+          
         })
         .catch(() => {
           setError("Error al agregar su horario intentel de nuevo")
@@ -185,6 +188,18 @@ console.log(IdDia)
 
     console.log(misHorarios)
 
+  }
+
+  function Eliminar(e) {
+    db.collection("Usuarios").doc(currentUser.uid).collection("Horario").doc(e).delete().then(() => {
+      setExito("Su horario fue Eliminado con éxito")
+      history.push("/Horarios")
+    }).catch((error) => {
+      console.error("Error removing document: ", error);
+    });
+  }
+  function quitar() {
+    setExito("")
   }
 
 
@@ -289,21 +304,29 @@ console.log(IdDia)
                 <p class="slide round"></p>
               </label></span>
             </div>
+            <div>
+              {Exito &&
+                <div><label>{Exito} &nbsp;&nbsp;<FontAwesomeIcon icon={faTrash} onClick={quitar} /></label></div>
+              }
+            </div>
             <div className="dash-cards">
               {misHorarios.length ?
-               misHorarios.map(hora=>(
+                misHorarios.map(hora => (
                   <div className="card-single">
                     <div className="card-body">
                       <div><h3>{hora.dia}</h3></div>
-                      {IdDia.horas}
-                            <div>
-                              <div>{hora.horas}</div>
-                           </div>
+                      <div>
+                        <div>{hora.horas}</div>
+                      </div>
+                      <div className="form-inline">
+                        <div className="mt-3 mr-3" ><FontAwesomeIcon icon={faEdit} /></div>
+                        <div className="mt-3"><FontAwesomeIcon icon={faTrash} onClick={(e) => Eliminar(hora.dia, e)} /></div>
+                      </div>
                     </div>
                   </div>
-              )) : (
-                <p></p>
-              )}
+                )) : (
+                  <p></p>
+                )}
             </div>
           </main>
           : <span></span>}
@@ -325,63 +348,63 @@ console.log(IdDia)
                 </Alert>
               }
               </div>
-              {mostratDiv === true ?
-                <div id="div" className="activity-grip_2 abc">
-                  <div className="activity-card_1">
-                    <div className="text-center">
-                      <div><h3>Horas</h3></div>
-                      {statehora.opcioneshora.map((checkbox, i) => {
-                        return (
-                          <div className="text-center">
-                            <Checkbox initialState={false} id={i + 1} value={checkbox.hora} onChange={(onCheckboxClickedHora)} />
-                            {checkbox.hora}
-                          </div>
-                        )
-                      })}
+              <div className="row">
+                <div className="col-md-6">
+                  {mostratDiv === true ?
+                    <div id="div" className="activity-grip_2 abc">
+                      <div className="activity-card_1">
+                        <div className="text-center">
+                          <div><h3>Horas</h3></div>
+                          {statehora.opcioneshora.map((checkbox, i) => {
+                            return (
+                              <div className="text-center">
+                                <Checkbox initialState={false} id={i + 1} value={checkbox.hora} onChange={(onCheckboxClickedHora)} />
+                                {checkbox.hora}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                    : <span></span>}
                 </div>
-                : <span></span>}
-
+                <div className="col-md-6">
+                  {mostratDiv === true ?
+                    <div>
+                      <h1 id="title">Dias marcado</h1>
+                      <div>{nuevoDaos}</div>
+                    </div>
+                    : <span></span>}
+                  {mostratDivHora === true ?
+                    <div>
+                      <h1>Horas marcado</h1>
+                      {nuevoDaosHora.map(dia => (
+                        <div>{dia}</div>
+                      ))}
+                      <div className="text-center">
+                        <button onClick={(e) => ActualizarHorario("listo", e)}>
+                          Agregar
+                  </button>
+                      </div>
+                    </div>
+                    : <span></span>}
+                </div>
+              </div>
               {mostratDivDia === false ?
-                <div>
+                <div className="">
                   <div className="text-center">
                     <div><h2>Días</h2></div>
-                    <div className="form-inline mb-5 ml-2">
+                    <div className="form-inline" id="dias">
                       {state.opciones.map((checkbox, i) => {
                         return (
 
-                          <div className="text-center">
-
-                            <div className="ml-2"> {checkbox.dia}</div>
-                            <Checkbox initialState={false} id={i + 1} value={checkbox.dia} onChange={(onCheckboxClicked)} />
+                          <div className="">
+                            <div className="ml-5 mb-2"> {checkbox.dia}</div>
+                            <div className="ml-5">  <Checkbox initialState={false} id={i + 1} value={checkbox.dia} onChange={(onCheckboxClicked)} /></div>
                           </div>
                         )
                       })}
                     </div>
-                  </div>
-
-
-                </div>
-                : <span></span>}
-            </main>
-            <main>
-              {mostratDiv === true ?
-                <div>
-                  <h1 id="title">Dias marcado</h1>
-                  <div>{nuevoDaos}</div>
-                </div>
-                : <span></span>}
-              {mostratDivHora === true ?
-                <div>
-                  <h1>Horas marcado</h1>
-                  {nuevoDaosHora.map(dia => (
-                    <div>{dia}</div>
-                  ))}
-                  <div className="text-center">
-                    <button onClick={(e) => ActualizarHorario("listo", e)}>
-                      Agregar
-                  </button>
                   </div>
                 </div>
                 : <span></span>}

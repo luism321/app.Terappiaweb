@@ -288,14 +288,14 @@ margin-bottom: 2rem;
     width: 100%;
     background-size: cover;
     background-repeat: no-repeat;
-    /* background-image: url("/src/img/Star1.png"); */
+    background-image: url("/src/img/Star1.png");
 }
 #starsEstandar div{
     height: 135px;
     width: 100%;
     background-size: cover;
     background-repeat: no-repeat;
-    /* background-image: url("/src/img/Star2.png"); */
+    background-image: url("/src/img/Star2.png");
 }
 .validarInput{
     color: red;
@@ -305,7 +305,7 @@ margin-bottom: 2rem;
     width: 100%;
     background-size: cover;
     background-repeat: no-repeat;
-    /* background-image: url("/src/img/star3.png"); */
+    background-image: url("/src/img/star3.png");
 }
 .card-single_planes{
     margin-bottom: 1rem;
@@ -324,10 +324,14 @@ margin-bottom: 2rem;
   }
 
   #div{
-      float: right;
       height: 100%;
   }
-
+#dias{
+    margin-left: 10%;
+    margin-right: 10%;
+    align-items: center;
+    width: 100%;
+}
 .card-body #A-1 ,
 .card-body #A-2,
 .card-body #A-3 {
@@ -338,6 +342,17 @@ margin-bottom: 2rem;
     background-repeat: no-repeat;
     border-radius: 20%;
 }
+.upda #A-1 {
+    margin-top: -100px;
+    margin-bottom: 20px;
+    padding: 2rem;
+    height: 35px;
+    width: 35px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 20%;
+}
+
 #A-1{
     background-image: url("../img/descarga.jpg");
 }
@@ -526,7 +541,20 @@ tbody tr:nth-child(even)
 #boton{
     text-align: center;
 }
+#BotonEmergencia{
+    height: 50px;
+    width: 250px;
+    border-radius: 13px;
+}
 .botonA button{
+    text-align: center;
+    background: linear-gradient(153deg, rgb(72, 232, 231,1) 2%, #837BEC 70%);
+    color: #FFF;
+    border: 1px solid var(--main-color);
+    border-radius: 4px;
+    padding: .4rem 1rem;
+}
+.agendar button{
     text-align: center;
     background: linear-gradient(153deg, rgb(72, 232, 231,1) 2%, #837BEC 70%);
     color: #FFF;

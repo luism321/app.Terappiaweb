@@ -37,8 +37,9 @@ const Signup = () => {
         var user = userCredential.user.uid;
       db.collection("Usuarios").doc(user).set({
         tipouser:TipoUser,
-        especialista:Especialista,
+        especialidad:Especialista,
         nombres:Nombres,
+        aprobado:false,
         apellidos:Apellidos,
         correo:Email,
         uid:user,

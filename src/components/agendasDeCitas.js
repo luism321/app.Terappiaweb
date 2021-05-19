@@ -8,20 +8,43 @@ KeyboardDatePicker
 } from '@material-ui/pickers'
 
 function Cita(){
-//     const [selectedDate,setSelectedDate]=React.useState(
-//         new Date()
-//     )
-//     const [selectedTime,setSelectedTime]=React.useState(
-//         new Date()
-//     )
+    const [selectedDate,setSelectedDate]=React.useState(
+        new Date()
+    )
+    const [selectedTime,setSelectedTime]=React.useState(
+        new Date()
+    )
 
-// const handleDateChange=(date)=>{
-// setSelectedDate(date)
-// setSelectedTime(date)
-// }
+const handleDateChange=(date)=>{
+setSelectedDate(date)
+setSelectedTime(date)
+}
 
 return(
-    <p>hola</p>
+<div className="">
+<MuiPickersUtilsProvider utils={DateFnsUtils}>
+    <Grip container justify="space-around">
+        <KeyboardDatePicker
+        //disableToolbar
+        format="MM/dd/yy"
+        margin="normal"
+        id="date-picker"
+        label="date-picker"
+        value={selectedDate}
+        onChange={handleDateChange}
+        KeyboardButtonProps={{'aria-label':'change date'}}
+        />
+        <KeyboardTimePicker
+        margin="normal"
+        id="timepicker"
+        label="Time picker"
+        value={selectedTime}
+        onChange={handleDateChange}
+        KeyboardButtonProps={{'aria-label':'change date'}}
+        />
+    </Grip>
+</MuiPickersUtilsProvider>
+</div>
 );
 
 

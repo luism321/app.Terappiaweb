@@ -7,6 +7,7 @@ import {  Alert } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext";
 import {db} from "../firebase"
 import firebase from "../firebase"
+import { set } from "react-hook-form";
 
 
 
@@ -50,7 +51,8 @@ db.collection("Usuarios").doc(currentUser.uid).update({
 }
 const [currentDatosPaDe, setLinks ] = useState([]);
 const [currentId, setCurrentId] = useState("");
-const [MostrarDiv, setMostrar] = useState(true);
+const [status, setstatus] = useState("");
+const [statusSelect, setstatusSelect] = useState("");
 
 
 if(currentId!==""){
@@ -64,22 +66,7 @@ db.collection("Usuarios")
                        alert(error);
                    });
 }
-const getLinks = async () => {
-    db.collection("Usuarios").where("tipouser","==","Paciente").onSnapshot((querySnapshot) => {
-      const docs = [];
-      querySnapshot.forEach((doc) => {
-        docs.push({ ...doc.data(), id: doc.id });
-      });
-      setLinks(docs);
-      console.log(currentDatosPaDe)
-    });
-    
-};
 
-  useEffect(() => {
-    getLinks();
-  }, []);
-   
   async function handleLogout() {
     setError("")
     try {
@@ -88,6 +75,34 @@ const getLinks = async () => {
     } catch {
       setError("No se pudo cerrar la sesión")
     }
+  }
+
+
+  function EstatusSelect(e){
+    setstatusSelect(e)
+    if(e==="0"){
+        db.collection("Citas").where("uid_especialista","==",currentUser.uid).onSnapshot((querySnapshot) => {
+            const docs = [];
+            querySnapshot.forEach((doc) => {
+              docs.push({ ...doc.data(), id: doc.id });
+            });
+            setLinks(docs);
+            console.log(currentDatosPaDe)
+          }); 
+      }
+  }
+
+  function Estatus(e){
+      setstatus(e)
+    db.collection("Citas").where("uid_especialista","==",currentUser.uid).where("estatus","==",statusSelect).where("fecha","==",e).onSnapshot((querySnapshot) => {
+        const docs = [];
+        querySnapshot.forEach((doc) => {
+          docs.push({ ...doc.data(), id: doc.id });
+        });
+        setLinks(docs);
+        console.log(currentDatosPaDe)
+      });
+      
   }
   
 
@@ -180,223 +195,55 @@ const getLinks = async () => {
             
         </header>
         <main>
+        <th>
+        <select className="selectEspe" onChange={(e) => EstatusSelect(e.target.value, e)}>
+            <option value="" >Seleccionar</option>
+            <option value="0" >Todos</option>
+            <option value="Pendiente" >Pendientes</option>
+            <option value="Reprogramada" >Reprogramadas</option>
+            <option value="Cancelada" >Canceladas</option>
+        </select>
+        
+        </th><div className="col-2"><input className="form-control" type="date" onChange={(e) => Estatus(e.target.value, e)}/></div>
         <h2 className="dash-title_2 a"><h1>Citas Agendadas</h1></h2>
-        <h2 className="dash-title_2 b"><h2>Lunes</h2></h2>
-            <div className="dash-cards_1">
+        <div className="dash-cards">
+        {currentDatosPaDe.length ? (
+                currentDatosPaDe.map(array => (
                 <div className="card-single">
                     <div className="card-body">
-                    <div>
-                        <label>Paciente:</label>
-                        <h5>Manuel alvares</h5>
-                        <label>Hora:</label>
-                            <h4>7:30 pm</h4>
-                        <label>Status</label>
-                        <h4>Atendida</h4> 
-                    </div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Ver paciente</a></div>
+                        <div className="container" id="A-1"></div>
+                        <div>
+                            <label>Paciente:</label>
+                            <h5>{array.nombres_paciente}&nbsp;&nbsp;{array.apellidos_paciente}</h5>
+                            <label>Hora:</label>
+                            <h4>{array.hora}</h4>
+                            <label>Estatus:</label>
+                            <h4>{array.estatus}</h4>
+                        </div>
                     </div>
                     <div className="card-footer">
-                        <div className="mr-3"><a href="">Reprogramar</a></div>
-                        <div className=""><a href="">Retomar cita</a></div>
-                        <div className="mr-3"><a href="">Ir a consulta</a></div>
+                        <Link to="/videoConferencia"><div className="text-center" id="ini">Iniciar consulta</div></Link>
                     </div>
                     <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Cancelar</a></div>
+                        <di className="mr-3"><a>Reprogramar</a></di>
+                        {status!=="Cancelada"?
+                        <div className="mr-3"><a>Cancelar</a></div>
+                        :<div></div>
+                    }  
+                        {status==="Cancelada"?
+                        <div className="mr-3"><a>Retomar</a></div>
+                        :<div></div>
+                    }   
+                    </div>
+                    <div className="card-footer" id="ini">
+                        <div className="mr-3 text-center"  onClickCapture={() => setCurrentId(array.uid_paciente)} >Ver paciente</div>
                     </div>
                 </div>
-                <div className="card-single">
-                    <div className="card-body">
-                    <div>
-                        <label>Paciente:</label>
-                        <h5>Manuel alvares</h5>
-                        <label>Hora:</label>
-                            <h4>7:30 pm</h4>
-                        <label>Status</label>
-                        <h4>Pendiente</h4> 
-                    </div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Ver paciente</a></div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3"><a href="">Reprogramar</a></div>
-                        <div className=""><a href="">Retomar cita</a></div>
-                        <div className="mr-3"><a href="">Ir a consulta</a></div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Cancelar</a></div>
-                    </div>
+                ))
+                ) : (
+                  <p></p>
+                )}
                 </div>
-                <div className="card-single">
-                    <div className="card-body">
-                    <div>
-                        <label>Paciente:</label>
-                        <h5>Manuel alvares</h5>
-                        <label>Hora:</label>
-                            <h4>7:30 pm</h4>
-                        <label>Status</label>
-                        <h4>Pendiente</h4> 
-                    </div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Ver paciente</a></div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3"><a href="">Reprogramar</a></div>
-                        <div className=""><a href="">Retomar cita</a></div>
-                        <div className="mr-3"><a href="">Ir a consulta</a></div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Cancelar</a></div>
-                    </div>
-                </div>
-            </div>
-            <h2 className="dash-title_2 b"><h2>Martes</h2></h2>
-            <div className="dash-cards_1">
-            <div className="card-single">
-                    <div className="card-body">
-                    <div>
-                        <label>Paciente:</label>
-                        <h5>Manuel alvares</h5>
-                        <label>Hora:</label>
-                            <h4>7:30 pm</h4>
-                        <label>Status</label>
-                        <h4>Pendiente</h4> 
-                    </div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Ver paciente</a></div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3"><a href="">Reprogramar</a></div>
-                        <div className=""><a href="">Retomar cita</a></div>
-                        <div className="mr-3"><a href="">Ir a consulta</a></div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Cancelar</a></div>
-                    </div>
-                </div>
-                <div className="card-single">
-                    <div className="card-body">
-                    <div>
-                        <label>Paciente:</label>
-                        <h5>Manuel alvares</h5>
-                        <label>Hora:</label>
-                            <h4>7:30 pm</h4>
-                        <label>Status</label>
-                        <h4>Pendiente</h4> 
-                    </div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Ver paciente</a></div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3"><a href="">Reprogramar</a></div>
-                        <div className=""><a href="">Retomar cita</a></div>
-                        <div className="mr-3"><a href="">Ir a consulta</a></div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Cancelar</a></div>
-                    </div>
-                </div>
-                <div className="card-single">
-                    <div className="card-body">
-                    <div>
-                        <label>Paciente:</label>
-                        <h5>Manuel alvares</h5>
-                        <label>Hora:</label>
-                            <h4>7:30 pm</h4>
-                        <label>Status</label>
-                        <h4>Pendiente</h4> 
-                    </div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Ver paciente</a></div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3"><a href="">Reprogramar</a></div>
-                        <div className=""><a href="">Retomar cita</a></div>
-                        <div className="mr-3"><a href="">Ir a consulta</a></div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Cancelar</a></div>
-                    </div>
-                </div>
-            </div> 
-            <h2 className="dash-title_2 b"><h2>Miercoles</h2></h2>
-            <div className="dash-cards_1">
-            <div className="card-single">
-                    <div className="card-body">
-                    <div>
-                        <label>Paciente:</label>
-                        <h5>Manuel alvares</h5>
-                        <label>Hora:</label>
-                            <h4>7:30 pm</h4>
-                        <label>Status</label>
-                        <h4>Pendiente</h4> 
-                    </div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Ver paciente</a></div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3"><a href="">Reprogramar</a></div>
-                        <div className=""><a href="">Retomar cita</a></div>
-                        <div className="mr-3"><a href="">Ir a consulta</a></div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Cancelar</a></div>
-                    </div>
-                </div>
-                <div className="card-single">
-                    <div className="card-body">
-                    <div>
-                        <label>Paciente:</label>
-                        <h5>Manuel alvares</h5>
-                        <label>Hora:</label>
-                            <h4>7:30 pm</h4>
-                        <label>Status</label>
-                        <h4>Pendiente</h4> 
-                    </div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Ver paciente</a></div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3"><a href="">Reprogramar</a></div>
-                        <div className=""><a href="">Retomar cita</a></div>
-                        <div className="mr-3"><a href="">Ir a consulta</a></div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Cancelar</a></div>
-                    </div>
-                </div>
-                <div className="card-single">
-                    <div className="card-body">
-                    <div>
-                        <label>Paciente:</label>
-                        <h5>Manuel alvares</h5>
-                        <label>Hora:</label>
-                            <h4>7:30 pm</h4>
-                        <label>Status</label>
-                        <h4>Pendiente</h4> 
-                    </div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Ver paciente</a></div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3"><a href="">Reprogramar</a></div>
-                        <div className=""><a href="">Retomar cita</a></div>
-                        <div className="mr-3"><a href="">Ir a consulta</a></div>
-                    </div>
-                    <div className="card-footer">
-                        <div className="mr-3 text-center"><a href="">Cancelar</a></div>
-                    </div>
-                </div>
-            </div>
         </main>
 
     </div> 

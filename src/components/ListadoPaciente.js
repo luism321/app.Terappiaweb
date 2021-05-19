@@ -66,14 +66,14 @@ db.collection("Usuarios")
 }
 
 const getLinks = async () => {
-    db.collection("Usuarios").where("tipouser","==","Paciente").onSnapshot((querySnapshot) => {
-      const docs = [];
-      querySnapshot.forEach((doc) => {
-        docs.push({ ...doc.data(), id: doc.id });
+    db.collection("Citas").where("uid_especialista","==",currentUser.uid).onSnapshot((querySnapshot) => {
+        const docs = [];
+        querySnapshot.forEach((doc) => {
+          docs.push({ ...doc.data(), id: doc.id });
+        });
+        setLinks(docs);
+        console.log(currentDatosPaDe)
       });
-      setLinks(docs);
-      console.log(currentDatosPaDe)
-    });
     
 };
 

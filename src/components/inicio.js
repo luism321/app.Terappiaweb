@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory, Link } from "react-router-dom";
 import './Dashboard.css';
+import { faHome, faUser, faAmbulance, faUserEdit, faClinicMedical, faPowerOff, faBars, faBell, faCommentAlt, faSmile, faGift, faIdBadge, faCalendar, faFunnelDollar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Alert } from "react-bootstrap"
 import { db } from "../firebase"
+import firebase from "../firebase"
 import 'moment/locale/es'
 import moment from 'moment';
 moment.locale('es');
@@ -10,6 +14,8 @@ moment.locale('es');
 
 
 export default function Inicio() {
+  const [error, setError] = useState("");
+  const [currentDatos, setcurrenDatos] = useState("");
   const { currentUser, logout } = useAuth("");
   const [currentDatosPa, setcurrenDatosPa] = useState("");
   const [currentDatosPare, setcurrenDatosPare] = useState("");
@@ -26,20 +32,19 @@ export default function Inicio() {
   const [currentId, setCurrentId] = useState("");
   const [currentPerfil, setCurrentPerfil] = useState("");
 
-function Datosmedico(e) {
-    console.log(e)
-    setCurrentId(e)
-    db.collection("Usuarios")
-      .doc(e)
-      .get().then(function (doc) {
-        let users = doc.data()
-        setCurrentPerfil(users);
-      }).catch(function (error) {
-        console.log("Error getting User:", error);
-        alert(error);
-      });
 
-  }
+
+    firebase.auth().onAuthStateChanged(function (user) {
+      db.collection("Usuarios")
+        .doc(user.uid)
+        .get().then(function (doc) {
+          let users = doc.data()
+          setcurrenDatos(users.nombres); 
+        });
+    })
+    
+    
+
 
   const Hamil = async () => {
     db.collection("Hamilton")
@@ -63,7 +68,20 @@ function Datosmedico(e) {
     Hamil();
   }, []);
 
+  function Datosmedico(e) {
+    console.log(e)
+    setCurrentId(e)
+    db.collection("Usuarios")
+      .doc(e)
+      .get().then(function (doc) {
+        let users = doc.data()
+        setCurrentPerfil(users);
+      }).catch(function (error) {
+        console.log("Error getting User:", error);
+        alert(error);
+      });
 
+  }
 
 
   if (currentDatosParan === "N/A") {
@@ -143,7 +161,7 @@ function Datosmedico(e) {
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialista", "==", "Psicólogo").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psicólogo").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -154,14 +172,14 @@ function Datosmedico(e) {
 
   if (currentDatosPare === "¿Qué tipo de asesoramiento adulto estás buscando?=Pareja") {
     const array = [];
-    db.collection("Usuarios").where("especialista", "==", "Psicólogo").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psicólogo").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialista", "==", "Psicólogo").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psicólogo").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -171,14 +189,14 @@ function Datosmedico(e) {
   }
   if (currentDatosParan === "¿Has estado experimentado algunos de estos síntomas?=Paranoia, sensación de persecución, interpretación de mensajes a través de señales") {
     const array = [];
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -190,14 +208,14 @@ function Datosmedico(e) {
 
   if (currentDatossuci === "¿Has tenido pensamientos suicidas?=Desde hace un tiempo") {
     const array = [];
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -207,14 +225,14 @@ function Datosmedico(e) {
   }
   if (currentDatossuci === "¿Has tenido pensamientos suicidas?=Desde hace un tiempo") {
     const array = [];
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -224,14 +242,14 @@ function Datosmedico(e) {
   }
   if (currentDatossuci === "¿Has tenido pensamientos suicidas?=Desde hace menos de dos semanas") {
     const array = [];
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -241,14 +259,14 @@ function Datosmedico(e) {
   }
   if (currentDatossuci === "¿Has tenido pensamientos suicidas?=Justo ahora") {
     const array = [];
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -258,14 +276,14 @@ function Datosmedico(e) {
   }
   if (currentDatosMiedo === "¿Actualmente sientes ansiedad, ataques de pánico o tienes algún miedo?=Si") {
     const array = [];
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -275,14 +293,14 @@ function Datosmedico(e) {
   }
   if (currentDatosMedicacion === "¿Actualmente estás tomando alguna medicación (psicofármaco)?=Si") {
     const array = [];
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -292,14 +310,14 @@ function Datosmedico(e) {
   }
   if (currentDatossuciHijo === "Su hijo ha tenido pensamientos y/o intentos suicidas=Desde hace un tiempo un tiempo") {
     const array = [];
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -309,14 +327,14 @@ function Datosmedico(e) {
   }
   if (currentDatossuciHijo === "Su hijo ha tenido pensamientos y/o intentos suicidas=Desde hace menos de dos semanas") {
     const array = [];
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -326,14 +344,14 @@ function Datosmedico(e) {
   }
   if (currentDatossuciHijo === "Su hijo ha tenido pensamientos y/o intentos suicidas=Justo ahora") {
     const array = [];
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -343,14 +361,14 @@ function Datosmedico(e) {
   }
   if (currentDatosMalos === "¿Has tenido pensamientos suicidas adolecente?=Desde hace un tiempo un tiempo") {
     const array = [];
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -360,14 +378,14 @@ function Datosmedico(e) {
   }
   if (currentDatosMalos === "¿Has tenido pensamientos suicidas adolecente?=Desde hace menos de dos semanas") {
     const array = [];
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -377,14 +395,14 @@ function Datosmedico(e) {
   }
   if (currentDatosMalos === "¿Has tenido pensamientos suicidas adolecente?=Justo ahora") {
     const array = [];
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialista", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -395,6 +413,15 @@ function Datosmedico(e) {
 
   function ObtenerId(e) {
     localStorage.setItem("id", JSON.stringify(e))
+  }
+  async function handleLogout() {
+    setError("")
+    try {
+      await logout()
+      history.push("/login")
+    } catch {
+      setError("No se pudo cerrar la sesión")
+    }
   }
 
 
@@ -411,6 +438,89 @@ function Datosmedico(e) {
   }
   return (
     <>
+      {error && <Alert variant="danger">{error}</Alert>}
+        <input type="checkbox" id="sidebar-toggle" />
+
+        <div className="sidebar">
+          <div className="sidebar-header">
+            <h3 className="brand">
+              <span className="ti-unlink"></span>
+              <span ><div id="ig" /></span>
+            </h3>
+            <label htmlFor="sidebar-toggle"><FontAwesomeIcon icon={faBars} /></label>
+          </div>
+
+          <div className="sidebar-menu" id="sidebar">
+          <ul>
+            <li>
+              <Link to="/">
+                <a >
+                  <a><FontAwesomeIcon icon={faHome} /></a>
+                  <span>Inicio</span>
+                </a>
+              </Link>
+            </li>
+            <li>
+              <Link to="/Emergencia">
+                <a >
+                  <a id="ti-face-smile"><FontAwesomeIcon icon={faAmbulance} /></a>
+                  <span id="ti-face-smile">Emergencia</span>
+                </a>
+              </Link>
+            </li>
+            <li>
+              <Link to="/Directorio">
+                <a>
+                  <a className="ti-face-smile"><FontAwesomeIcon icon={faClinicMedical} /></a>
+                  <span>Directotio</span>
+                </a>
+              </Link>
+            </li>
+            <li>
+              <Link to="/Planes" >
+                <a>
+                  <a id="planes"><FontAwesomeIcon icon={faFunnelDollar} /></a>
+                  <span id="planes" >Planes</span>
+                </a>
+              </Link>
+            </li>
+            <li>
+              <Link to="/Update">
+                <a >
+                  <a className="ti-clipboard"><FontAwesomeIcon icon={faUserEdit} /></a>
+                  <span>Editar perfil</span>
+                </a>
+              </Link>
+            </li>
+            <li>
+              <Link to="/Contactos">
+                <a>
+                  <a className="ti-clipboard"><FontAwesomeIcon icon={faUser} /></a>
+                  <span>Contactos</span>
+                </a>
+              </Link>
+            </li>
+
+            <li id="cerrar">
+              <a onClick={handleLogout}>
+                <a ><FontAwesomeIcon icon={faPowerOff} /><span >Cerrar sesíon</span></a>
+              </a>
+            </li>
+
+          </ul>
+        </div>
+        </div>
+        <div className="main-content">
+          <header className="row" >
+            <div className="search-wrapper">
+            </div>
+            <div className="social-icons">
+              <span className="ti-bell"><FontAwesomeIcon icon={faBell} /></span>
+              <span className="ti-comment"><FontAwesomeIcon icon={faCommentAlt} /></span>
+              <div></div>&nbsp;{currentDatos}
+            </div>
+          </header>
+          <main>
       {Panel === true ?
         <div>
           <h2 className="dash-title">Especialistas sugeridos Para ti</h2>
@@ -452,18 +562,18 @@ function Datosmedico(e) {
                       <tr>
                         <th>Nombre</th>
                         <th>Perfil</th>
-                        <th>Estatus de semana</th>
+                        <th>Opciones</th>
                       </tr>
                     </thead>
                     <tbody>
                       {currentDatosList.length ? (
                         currentDatosList.map(array => (
                           <tr>
-                            <td>{array.nombres}</td>
+                            <td>{array.nombres}&nbsp;&nbsp;{array.apellidos}</td>
                             <td className="td-team">
                               <div onClick={(e) => mostrado("mostrado", e)} onClickCapture={(e) => Datosmedico(array.uid, e)}><div className="img-1"></div></div>
                             </td>
-                            <td><span className="badge">Ocupado</span></td>
+                            <td><Link to="/AgendarCitas"><div className="agendar" onClick={(e) => ObtenerId(array.uid, e)}><button>Agendar cita</button></div></Link></td>
                           </tr>
                         ))
                       ) : (
@@ -501,6 +611,8 @@ function Datosmedico(e) {
       ) : (
         <p></p>
       )}
+      </main>
+      </div>
 
     </>
 

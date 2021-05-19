@@ -502,7 +502,7 @@ async function handleLogout() {
                 ref={emailRef}
                 required
                 onInput={(e)=>setEmail(e.target.value)}
-                defaultValue={currentUser.email}
+                defaultValue={DatosNombre.correo}
               />
             </div>
             <div className="form-group" id="password">
