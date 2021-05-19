@@ -2,7 +2,7 @@ import { PayPalButton } from "react-paypal-button-v2";
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory, Link } from "react-router-dom";
-// import './Dashboard.css';
+import './Dashboard.css';
 // import { faHome, faUser, faAmbulance, faUserEdit, faClinicMedical, faPowerOff, faBars, faBell, faCommentAlt, faSmile, faGift, faIdBadge, faCalendar, faFunnelDollar } from "@fortawesome/free-solid-svg-icons";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { Alert } from "react-bootstrap"
@@ -39,6 +39,7 @@ export default function Planes() {
     }
 
     const UpdatePlan = (data, details, tipoPlan) => {
+        alert("se realizo el cambio de plan exitosamente !!!")
         console.clear()
         console.log(data)
         console.log(details)
@@ -46,6 +47,7 @@ export default function Planes() {
     }
 
     const errorUpdatePlan = () => {
+        alert("Ha ocurrido un problema al relizar el cambio de plan, intente otra vez")
         console.clear()
         console.log("No se realizo el cambio")
     }
