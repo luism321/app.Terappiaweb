@@ -38,6 +38,10 @@ function Login() {
 				setExito("Iniciando")
 				history.push("/DashboardEs")
 			}	
+			else if(doc.data().tipouser==="administrador" ){
+				setExito("Iniciando")
+				history.push("/Admin")
+			}	
 	}); 
 	
 })

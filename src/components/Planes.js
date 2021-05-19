@@ -1,7 +1,42 @@
-import React from "react";
 import { PayPalButton } from "react-paypal-button-v2";
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { useHistory, Link } from "react-router-dom";
+// import './Dashboard.css';
+// import { faHome, faUser, faAmbulance, faUserEdit, faClinicMedical, faPowerOff, faBars, faBell, faCommentAlt, faSmile, faGift, faIdBadge, faCalendar, faFunnelDollar } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { Alert } from "react-bootstrap"
+import { db } from "../firebase"
+import firebase from "../firebase"
 
 export default function Planes() {
+    const [error, setError] = useState("");
+    const { logout } = useAuth("");
+    const [currentDatos_3, setcurrenDatos_3] = useState("");
+    const history = useHistory("")
+
+    useEffect(() => {
+        firebase.auth().onAuthStateChanged(function (user) {
+            db.collection("Usuarios")
+                .doc(user.uid)
+                .get().then(function (doc) {
+                    let users = doc.data()
+                    setcurrenDatos_3(users.nombres);
+                });
+        })
+
+
+    }, []);
+
+    async function handleLogout() {
+        setError("")
+        try {
+            await logout()
+            history.push("/login")
+        } catch {
+            setError("No se pudo cerrar la sesión")
+        }
+    }
 
     const UpdatePlan = (data, details, tipoPlan) => {
         console.clear()
@@ -158,8 +193,8 @@ export default function Planes() {
                             <div className="mb-3">
                                 5% de descuento en las siguientes 4 consultas y/o emergencias.
                             </div>
-                            <div className="mb-3">
-                                5% de descuento en traslado de récipe durante un mes.
+                                    <div className="mb-3">
+                                        5% de descuento en traslado de récipe durante un mes.
                             </div>
                             <div className="mb-5 " >
                                 <PayPalButton
@@ -203,8 +238,8 @@ export default function Planes() {
                             <div className="mb-3">
                                 7% de descuento en las siguientes 12 consultas y/o emergencias.
                             </div>
-                            <div className="mb-3">
-                                10% de descuento en traslado de récipe durante tres meses.
+                                    <div className="mb-3">
+                                        10% de descuento en traslado de récipe durante tres meses.
                             </div>
                             <div className="mb-5 " >
                                 <PayPalButton
@@ -248,8 +283,8 @@ export default function Planes() {
                             <div className="mb-3">
                                 10% de descuento en las siguientes 24 consultas y/o emergencias.
                             </div>
-                            <div className="mb-3">
-                                15% de descuento en el traslado del récipe durante seis meses.
+                                    <div className="mb-3">
+                                        15% de descuento en el traslado del récipe durante seis meses.
                             </div>
                             <div className="mb-5 " >
                                 <PayPalButton
@@ -279,6 +314,7 @@ export default function Planes() {
                                 />
                             </div>
                         </div>
+
                     </div>
                 </div>
 

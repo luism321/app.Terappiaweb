@@ -1,5 +1,6 @@
 import React from "react"
 import Signup from "./Signup"
+import SignupAdmin from "./signupAdmin"
 import { AuthProvider } from "../contexts/AuthContext"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 import Dashboard from "./Dashboard"
@@ -23,7 +24,8 @@ import Emergencias from "./Emergencias"
 import VideoConferencia from "./videoConferencia"
 import AgendarCitas from "./AgendarCitas"
 import ListadoPaciente from "./ListadoPaciente"
-
+import Admin from "./admin"
+import MisCitas from "./MisCitas"
 function App() {
   return (
     <div>
@@ -34,14 +36,17 @@ function App() {
             <PrivateRoute path="/DashboardEs" component={DashboardEs} />
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
+            <Route path="/signupAdmin" component={SignupAdmin} />
             <Route path="/Update" component={profile} />
             <Route path="/Directorio" component={Directorio} />
             <Route path="/Emergencia" component={DoctorEmergencia} />
             <Route path="/Emergencias" component={Emergencias} />
+            <Route path="/Miscitas" component={MisCitas} />
             <Route path="/Planes" component={Planes} />
             <Route path="/Horarios" component={Horarios} />
             <Route path="/UpdateProfile" component={UpdateProfile} />
             <Route path="/Agenda" component={Agenda} />
+            <Route path="/Admin" component={Admin} />
             <Route path="/Contactos" component={Contactos} />
             <Route path="/Contact" component={ContactosEs} />
             <Route path="/Service" component={Service} />

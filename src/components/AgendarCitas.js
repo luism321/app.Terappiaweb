@@ -3,7 +3,7 @@ import './Dashboard.css';
 import { Alert } from "react-bootstrap"
 import { db } from "../firebase";
 import { useHistory, Link } from "react-router-dom";
-import { faHome, faUser, faAmbulance, faUserEdit, faClinicMedical, faPowerOff, faBars, faBell, faCommentAlt, faSmile, faGift, faIdBadge, faCalendar, faFunnelDollar } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faUser, faAmbulance,faTrash, faUserEdit, faClinicMedical, faPowerOff, faBars, faBell, faCommentAlt, faSmile, faGift, faIdBadge, faCalendar, faFunnelDollar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAuth } from "../contexts/AuthContext";
 import 'moment/locale/es'
@@ -19,6 +19,7 @@ export default function AgendarCitasNew() {
   const [DatosNombre, setDatos] = useState("");
   const [DatosDoc, setDatosDoc] = useState("");
   const { currentUser, logout } = useAuth("");
+  
   const [Dias, setDias] = useState([]);
   const [HorasDis, setHorasDis] = useState([]);
   const [Exito, setExito] = useState("")
@@ -29,6 +30,7 @@ export default function AgendarCitasNew() {
   const [mostrarhoras, setmostrarhoras] = useState(false);
   const [ocultarhoras, setocultarhoras] = useState(true);
   const [show, setShow] = useState(true);
+  
 
   const id = JSON.parse(localStorage.getItem('id'))
 
@@ -82,13 +84,17 @@ export default function AgendarCitasNew() {
 
   const Fecha = (e,dataInfo) => {
     setFecha(e)
-    db.collection("Usuarios").doc(id).collection("Horarios").where("uid", "==", id).where("dia", "==", moment(e).format("dddd"))
+    db.collection("Usuarios").doc(id).collection("Horario").where("uid", "==", id).where("dia", "==", moment(e).format("dddd"))
       .onSnapshot(function (querySnapshot) {
         var Horarios = [];
+        var Dias = [];
         querySnapshot.forEach(function (doc) {
           let datos = doc.data()
+          let datosDias = doc.data()
           datos.$key = doc.id
           Horarios.push(datos);
+          Dias.push(datosDias);
+          setDias(Dias);
           console.log(datos)
         });
         if (Horarios.length > 0) {
@@ -98,7 +104,7 @@ export default function AgendarCitasNew() {
               querySnapshot.forEach(function (doc) {
                 let datos = doc.data()
                 datos.$key = doc.id
-                citas.push(datos);
+                citas.push(datos); 
               });
               console.log(Horarios)
               console.log(citas)
@@ -117,7 +123,7 @@ export default function AgendarCitasNew() {
                   }
                 })
                 setHoraDisponible(info)
-                setDias(info)
+                
                 setHorasDis(info)
                 console.log(HoraDisponible)
                 console.log(Dias)
@@ -125,54 +131,21 @@ export default function AgendarCitasNew() {
                 // setArrayCitas(citas)
               } else {
                 setHoraDisponible(Horarios[0].horas)
-                setDias(Horarios[0].horas)
                 setHorasDis(Horarios[0].horas)
-                console.log("no hay info")
               }
             });
         } else {
-          console.log("no hay info")
+          setError("Medico no posee horario para este dia")
           setHoraDisponible([])
-          setDias([])
           setHorasDis([])
         }
       });
 
-    // db.collection("Usuarios").doc(id).collection("Horarios").where("uid", "==", id).where("dia", "==",moment(e).format("dddd")).onSnapshot((querySnapshot) => {
-    //     const docs = [];
-    //     const diadocs = [];
-    //     querySnapshot.forEach((doc) => {
-    //       diadocs.push(doc.data().dia);
-    //       docs.push(doc.data());
-    //     });
-    //     console.log(docs)
-    //     setDias(diadocs)
-    //     setHorasDis(docs)
-    //   });
-    //   db.collection("Citas").where("uid_especialista", "==", id).where("fecha","==", e).onSnapshot((querySnapshot) => {
-    //     const docsCitas = [];
-    //     querySnapshot.forEach((doc) => {
-    //       docsCitas.push(doc.data().hora);
-    //     });
-    //     console.log(docsCitas)
-    // setArrayCitas(docsCitas)
-    // 
-
-    // console.log(ArrayHora)
-    // console.log(Hra)
-    // console.log(ArrayCitas)
-
-    //  console.log(HorasDispo)
-    //  console.log(ArrayCitas)
-    // for(let i=0;i<arrayNew.length;i++){
-
-    // let res= HorasDispo.find(a=>a!==ArrayCitas)
-    // console.log(res)
-    // }
-    // });
   }
 
-
+function vaciarState(){
+  setError("")
+}
 
 
 
@@ -223,7 +196,7 @@ export default function AgendarCitasNew() {
 
   return (
     <>
-      {error && <Alert variant="danger">{error}</Alert>}
+      
       <input type="checkbox" id="sidebar-toggle" />
 
       <div className="sidebar">
@@ -331,12 +304,12 @@ export default function AgendarCitasNew() {
                   <div className="card-single">
                     <div className="card-body">
                       <div>
-                        <div>
-                          <div><h3>{array}</h3></div>
+                        <div className="form-inline">
+                          <div><h3>{array.dia} </h3></div><div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{fecha}</div>
                         </div>
                       </div>
                       <div>
-                      <div>
+                      <div className="mt-2"> 
                           {HoraDisponible != undefined ? (
                             HoraDisponible.map(hora => (
                               <div><input type="checkbox" onChange={(e) => TomarHoraCita(e.target.value, e)} value={hora} onClick={(e) => most("mostrar", e)} />{hora}</div>
@@ -360,7 +333,7 @@ export default function AgendarCitasNew() {
                 <p></p>
               )}
             </div>
-           
+            {error && <div>{error}<Link to="/AgendarCitas">&nbsp;&nbsp;<FontAwesomeIcon icon={faTrash} onClick={vaciarState}/></Link></div>}
 
           </main>
           : <div></div>}
@@ -387,15 +360,10 @@ export default function AgendarCitasNew() {
               </div>
             </div>
             <div>{Exito &&
-              <Alert show={show} variant="success">
-                <Alert.Heading className="text-center">{Exito}</Alert.Heading>
-                <hr />
-                <div className="d-flex justify-content-end">
-                  <button className="btn btn" onClick={() => setShow(false)} variant="outline-success">
-                    <Link to="/">Cerrar X</Link>
-                  </button>
-                </div>
-              </Alert>
+              <div>
+                {Exito}
+                    <Link to="/">&nbsp;&nbsp;<FontAwesomeIcon icon={faTrash}/></Link>
+              </div>
             }
 
             </div>
