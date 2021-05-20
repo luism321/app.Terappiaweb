@@ -3,10 +3,11 @@ import './Dashboard.css';
 import { Alert } from "react-bootstrap"
 import { db } from "../firebase";
 import { useHistory, Link } from "react-router-dom";
-import { faHome, faUser, faAmbulance,faTrash, faUserEdit, faClinicMedical, faPowerOff, faBars, faBell, faCommentAlt, faSmile, faGift, faIdBadge, faCalendar, faFunnelDollar } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faUser, faAmbulance, faTrash, faUserEdit, faClinicMedical, faPowerOff, faBars, faBell, faCommentAlt, faSmile, faGift, faIdBadge, faCalendar, faFunnelDollar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAuth } from "../contexts/AuthContext";
 import 'moment/locale/es'
+import { PayPalButton } from "react-paypal-button-v2";
 
 import moment from 'moment';
 
@@ -19,7 +20,7 @@ export default function AgendarCitasNew() {
   const [DatosNombre, setDatos] = useState("");
   const [DatosDoc, setDatosDoc] = useState("");
   const { currentUser, logout } = useAuth("");
-  
+
   const [Dias, setDias] = useState([]);
   const [HorasDis, setHorasDis] = useState([]);
   const [Exito, setExito] = useState("")
@@ -30,7 +31,7 @@ export default function AgendarCitasNew() {
   const [mostrarhoras, setmostrarhoras] = useState(false);
   const [ocultarhoras, setocultarhoras] = useState(true);
   const [show, setShow] = useState(true);
-  
+
 
   const id = JSON.parse(localStorage.getItem('id'))
 
@@ -38,6 +39,10 @@ export default function AgendarCitasNew() {
 
   // variables Evander
   const [HoraDisponible, setHoraDisponible] = useState([])
+
+  const [HasPlan, setHasPlan] = useState(false)
+  const [uidPlan, setuidPlan] = useState("")
+  const [nuevoPrecio, setnuevoPrecio] = useState(0)
 
   // const arrayNew=HorasDis.horas
 
@@ -51,7 +56,17 @@ export default function AgendarCitasNew() {
       .doc(currentUser.uid)
       .get().then((doc) => {
         if (doc.exists) {
+          console.log(doc)
           let users = doc.data()
+          users.$key = doc.id
+          console.log(users)
+          if (users.uid_Plan != "" && users.consultasDisponibles > 0) {
+            setHasPlan(true)
+            setuidPlan(users.uid_Plan)
+          } else {
+            setHasPlan(false)
+            setuidPlan("")
+          }
           setDatos(users);
         }
       }).catch(function (error) {
@@ -80,9 +95,7 @@ export default function AgendarCitasNew() {
   }, []);
 
 
-  const [myArray, updateMyArray] = useState([]);
-
-  const Fecha = (e,dataInfo) => {
+  const Fecha = (e, dataInfo) => {
     setFecha(e)
     db.collection("Usuarios").doc(id).collection("Horario").where("uid", "==", id).where("dia", "==", moment(e).format("dddd"))
       .onSnapshot(function (querySnapshot) {
@@ -98,32 +111,32 @@ export default function AgendarCitasNew() {
           console.log(datos)
         });
         if (Horarios.length > 0) {
-          db.collection("Citas").where("uid_especialista", "==", id).where("fecha","==", e)
+          db.collection("Citas").where("uid_especialista", "==", id).where("fecha", "==", e)
             .onSnapshot(function (querySnapshot) {
               var citas = [];
               querySnapshot.forEach(function (doc) {
                 let datos = doc.data()
                 datos.$key = doc.id
-                citas.push(datos); 
+                citas.push(datos);
               });
               console.log(Horarios)
               console.log(citas)
               if (citas.length > 0) {
                 setHoraDisponible([])
                 let info = []
-                Horarios[0].horas.forEach(element=>{
+                Horarios[0].horas.forEach(element => {
                   let contador = 0
-                  citas.forEach(data=>{
-                    if (element == data.hora){
+                  citas.forEach(data => {
+                    if (element == data.hora) {
                       contador++
                     }
                   })
-                  if(contador == 0){
+                  if (contador == 0) {
                     info.push(element)
                   }
                 })
                 setHoraDisponible(info)
-                
+
                 setHorasDis(info)
                 console.log(HoraDisponible)
                 console.log(Dias)
@@ -143,19 +156,46 @@ export default function AgendarCitasNew() {
 
   }
 
-function vaciarState(){
-  setError("")
-}
-
-
-
+  function vaciarState() {
+    setError("")
+  }
 
 
   function TomarHoraCita(e) {
-    setTomarHoras(e)
+    if (uidPlan != "") {
+      db.collection("Planes")
+        .doc(uidPlan)
+        .get().then((doc) => {
+          if (doc.exists) {
+            let plan = doc.data()
+            console.log(plan)
+            console.log(uidPlan)
+            console.log(e)
+            console.log(DatosNombre)
+            console.log(DatosDoc)
+            for (let i = 0; i < plan.planes.length; i++) {
+              if(plan.planes[i] == DatosNombre.Plan){
+                console.log(parseInt(DatosDoc.precio_consulta) * parseInt(plan.descuentoConsultas[i]) / 100) 
+                setnuevoPrecio(DatosDoc.precio_consulta - (parseInt(DatosDoc.precio_consulta) * parseInt(plan.descuentoConsultas[i]) / 100))
+                console.log(nuevoPrecio)
+              }
+            }
+            setTomarHoras(e)  
+          }
+        }).catch(function (error) {
+          console.log("Error getting User:", error);
+          console.log(error);
+        });
+    } else {
+      setTomarHoras(e)  
+    }
+
   }
 
-  function AgregarConsulta() {
+  function AgregarConsulta(details, data) {
+    // console.log(details)
+    // console.log(data)
+    console.log(TomarHora)
     db.collection("Citas").doc().set({
       hora: TomarHora,
       nombres_paciente: DatosNombre.nombres,
@@ -169,11 +209,55 @@ function vaciarState(){
       apellido_especialista: DatosDoc.apellidos,
       num_principal_paciente: DatosNombre.num_principal,
       fecha_creacion: moment().format("DD/MM/YYYY")
-    }).then(() => {
-      history.push("/AgendarCitas")
-      setExito("Consulta agregada con Éxito")
     })
+      .then(() => {
+        db.collection("HistorialPagos").doc().set({
+          tipo_pago: "Crear Cita",
+          nombres_paciente: DatosNombre.nombres,
+          uid_paciente: DatosNombre.uid,
+          nombre_especialista: DatosDoc.nombres,
+          cedula_paciente: DatosNombre.cedula,
+          uid_especialista: DatosDoc.uid,
+          apellidos_paciente: DatosNombre.apellidos,
+          estatusPago: details.status,
+          apellido_especialista: DatosDoc.apellidos,
+          num_principal_paciente: DatosNombre.num_principal,
+          fecha_Pago: moment().format("DD/MM/YYYY"),
+          idPago:details.id,
+          fechaPagoPaypal:details.create_time,
+          direccionPagador:details.payer.address,
+          emailPagador:details.payer.name,
+          monto:details.purchase_units[0].amount,
+          facilitatorAccessToken:data.facilitatorAccessToken,
+          orderID:data.orderID,
+          payerID:data.payerID,
+          tipo_plan:"",
+          Plan:""
+        }).then(() => {
+          let infoFinal = DatosNombre
+          console.clear()
+          console.log(uidPlan)
+          console.log(DatosNombre)
+          if (uidPlan != "" && DatosNombre.consultasDisponibles > 0) {
+            infoFinal.consultasDisponibles = infoFinal.consultasDisponibles - 1 
+            if(infoFinal.consultasDisponibles == 0){
+              infoFinal.Plan = ""
+              infoFinal.Tipo_plan = ""
+              infoFinal.uid_Plan = ""
+            }
+            db.collection("Usuarios").doc(DatosNombre.$key).set(infoFinal)
+            .then(resp=>{
+              history.push("/")
+              setExito("Consulta agregada con Éxito")
+            })
+          }
+        })
+      })
 
+  }
+
+  function errorUpdatePlan() {
+    console.log("Error al pagar")
   }
 
   function most(e) {
@@ -196,7 +280,7 @@ function vaciarState(){
 
   return (
     <>
-      
+
       <input type="checkbox" id="sidebar-toggle" />
 
       <div className="sidebar">
@@ -296,7 +380,7 @@ function vaciarState(){
               </div>
               <div className="text-center">
                 <input type="date" className="form-control col-md-4" onChange={(e) => Fecha(e.target.value)}></input>
-              </div> 
+              </div>
             </div>
             <div className="dash-cards">
               {Dias.length != undefined ? (
@@ -309,7 +393,7 @@ function vaciarState(){
                         </div>
                       </div>
                       <div>
-                      <div className="mt-2"> 
+                        <div className="mt-2">
                           {HoraDisponible != undefined ? (
                             HoraDisponible.map(hora => (
                               <div><input type="checkbox" onChange={(e) => TomarHoraCita(e.target.value, e)} value={hora} onClick={(e) => most("mostrar", e)} />{hora}</div>
@@ -333,7 +417,7 @@ function vaciarState(){
                 <p></p>
               )}
             </div>
-            {error && <div>{error}<Link to="/AgendarCitas">&nbsp;&nbsp;<FontAwesomeIcon icon={faTrash} onClick={vaciarState}/></Link></div>}
+            {error && <div>{error}<Link to="/AgendarCitas">&nbsp;&nbsp;<FontAwesomeIcon icon={faTrash} onClick={vaciarState} /></Link></div>}
 
           </main>
           : <div></div>}
@@ -346,29 +430,96 @@ function vaciarState(){
                   <div className="mb-3">
                     {DatosDoc.nombres}&nbsp;&nbsp;{DatosDoc.apellidos}
                   </div>
-                  <div><label>Costo:</label></div>
+                  {/* <div><label>Costo:</label></div> */}
+                  
+                  {uidPlan != "" ? 
                   <div className="mb-3">
-                    {DatosDoc.precio_consulta}$
-                  </div>
+                    <div> Precio anterior: {DatosDoc.precio_consulta}$</div> 
+                    <div> Precio nuevo: {nuevoPrecio}$</div>
+                   </div> 
+                   :
+                   <div className="mb-3">
+                    <div> Precio: {DatosDoc.precio_consulta}$</div> 
+                   </div>
+                  }
+                    
+                  
                   <div className="">
                     {TomarHora}
                   </div>
                 </div>
-                <div id="boton" className="botonA">
-                  <button onClick={AgregarConsulta}>Registrar consulta</button>
+                <div id="boton" className="botonA" Style="width: 100%;justify-content: center;display: flex;">
+                  {uidPlan != "" ? 
+                    <PayPalButton
+                    amount={nuevoPrecio}
+                    // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
+                    onSuccess={(details, data) => {
+                      // OPTIONAL: Call your server to save the transaction
+                      fetch("/paypal-transaction-complete", {
+                        method: "post",
+                        body: JSON.stringify({
+                          orderId: data.orderID
+                        })
+                      })
+                        .then(resp => {
+                          AgregarConsulta(details, data)
+                        })
+                    }}
+                    catchError={(error) => {
+                      console.log(error)
+                      errorUpdatePlan()
+                    }}
+                    options={{
+                      clientId: "AV5h0ivhjvRnCQYyPCjnCzumB7lKEJP1IADFcBoqSRNVGfdTd3EkFFdDUVmFzxr2-gVQKS9evl1_E_Er",
+                      currency: "USD"
+                    }}
+                  />
+                  :
+                  <PayPalButton
+                    amount={DatosDoc.precio_consulta}
+                    // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
+                    onSuccess={(details, data) => {
+                      // OPTIONAL: Call your server to save the transaction
+                      fetch("/paypal-transaction-complete", {
+                        method: "post",
+                        body: JSON.stringify({
+                          orderId: data.orderID
+                        })
+                      })
+                        .then(resp => {
+                          AgregarConsulta(details, data)
+                        })
+                    }}
+                    catchError={(error) => {
+                      console.log(error)
+                      errorUpdatePlan()
+                    }}
+                    options={{
+                      clientId: "AV5h0ivhjvRnCQYyPCjnCzumB7lKEJP1IADFcBoqSRNVGfdTd3EkFFdDUVmFzxr2-gVQKS9evl1_E_Er",
+                      currency: "USD"
+                    }}
+                  />
+                  }
+                  
+                  {/* <button onClick={AgregarConsulta}>Registrar consulta</button> */}
                 </div>
               </div>
             </div>
             <div>{Exito &&
               <div>
                 {Exito}
-                    <Link to="/">&nbsp;&nbsp;<FontAwesomeIcon icon={faTrash}/></Link>
+                <Link to="/">&nbsp;&nbsp;<FontAwesomeIcon icon={faTrash} /></Link>
               </div>
             }
 
             </div>
           </main>
           : <div></div>}
+
+        {/* {HasPlan === false ?
+          <div><h1>No tienes plan ? selecciona uno</h1></div> :
+          <div><h1>Si tiene plan</h1></div>
+        } */}
       </div>
     </>
 
