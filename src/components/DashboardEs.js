@@ -29,7 +29,7 @@ export default function DashboardEs() {
                 .doc(user.uid)
                 .get().then(function (doc) {
                     let users = doc.data()
-                    setcurrenDatos(users.nombres);
+                    setcurrenDatos(users);
                     setcurrenDatosEme(users.disponible_emergencia);
                 }).catch(function (error) {
                     console.log("Error getting User:", error);
@@ -247,15 +247,14 @@ export default function DashboardEs() {
                 <header className="row" >
                     <div className="search-wrapper">
                     </div>
-                    <div className="social-icons">
+                    <div className="social-icons"><label>¿Esta activo para recibir emergencia?</label>
                         {currentDatosEme === false ?
                             <img id="BotonEmergencia" src="/boton1.jpeg" onClick={(e) => OnActivo("Activo", e)}></img>
                             : <span></span>}
                         {currentDatosEme === true ?
-                        <label>estas activo para recibir emergencia
                             <img id="BotonEmergencia" src="/boton2.jpeg" onClick={(e) => OnActivo("Activo", e)}></img>
-                            </label>: <span></span>}
-                        <div></div>&nbsp;&nbsp;{currentDatos}
+                            : <span></span>}
+                        <div className="updaPrin"><img src={currentDatos.foto_personal}></img></div>&nbsp;{currentDatos.nombres}
                     </div>
 
                 </header>
@@ -267,7 +266,7 @@ export default function DashboardEs() {
                             <div className="text-right cerrar" Style="font-size:20px" onClick={(e) => OnMostrar("Mostrar", e)}>Cerrar</div>
                             <div className="card-single">
                                 <div className="card-body">
-                                    <div className="container" id="A-1"></div>
+                                    <div className="updaLis text-center"> <img src={currentPerfil.foto_personal}></img></div>
                                     <div className="">
                                         <h5 className="mt-2">{currentPerfil.nombres}&nbsp;&nbsp;{currentPerfil.apellidos}</h5>
                                         <label>Cedula:</label>
@@ -379,42 +378,7 @@ export default function DashboardEs() {
                                 ) : (
                                     <p></p>
                                 )}
-                                <div className="summary">
-                                    <div className="summary-card">
-                                        <div className="summary-single">
-                                            <span ><FontAwesomeIcon icon={faIdBadge} /></span>
-                                            <div>
-                                                <h5>5</h5>
-                                                <small>Consultas para hoy</small>
-                                            </div>
-                                        </div>
-                                        <div className="summary-single">
-                                            <span><FontAwesomeIcon icon={faCalendar} /></span>
-                                            <div>
-                                                <h5>25</h5>
-                                                <small>Mis Pacientes</small>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div className="bday-card">
-                                        <div className="bday-flex">
-                                            <div className="bday-img"></div>
-                                            <div className="bday-info">
-                                                <label>Paciente:</label>
-                                                <h5>Manuel Alvarado</h5>
-                                                <small>Cumpleaños hoy</small>
-                                            </div>
-
-                                        </div>
-                                        <div className="text-center">
-                                            <button>
-                                                <span><FontAwesomeIcon icon={faGift} /></span>
-                        Desearle
-                  </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </section>
 

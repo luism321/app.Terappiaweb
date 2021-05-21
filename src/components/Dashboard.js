@@ -39,7 +39,7 @@ export default function Inicio() {
         .doc(user.uid)
         .get().then(function (doc) {
           let users = doc.data()
-          setcurrenDatos_2(users.nombres);
+          setcurrenDatos_2(users);
         });
     })
     db.collection("Hamilton")
@@ -520,7 +520,7 @@ export default function Inicio() {
           <div className="social-icons">
             <span className="ti-bell"><FontAwesomeIcon icon={faBell} /></span>
             <span className="ti-comment"><FontAwesomeIcon icon={faCommentAlt} /></span>
-            <div></div>&nbsp;{currentDatos_2}
+            <div className="updaPrin"><img src={currentDatos_2.foto_personal}></img></div>&nbsp;{currentDatos_2.nombres}
           </div>
         </header>
         <main>
