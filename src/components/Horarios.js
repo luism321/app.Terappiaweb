@@ -55,12 +55,17 @@ const Horarios = () => {
       setNuevodatoHora([...nuevoDaosHora])
     }
     else if (isChecked === false) {
-      const nuevoStateHora = []
-      nuevoStateHora.push(value)
-      setNuevodatoHora([...nuevoDaosHora])
+      for(let i=0;i<=nuevoDaosHora.length;i++){
+      const nuevoStateHora =nuevoDaosHora[i]
+      if(nuevoStateHora>=0){
+      nuevoDaosHora.push(value)
     }
-
-    console.log(nuevoDaosHora)
+    }
+    let filtro = nuevoDaosHora.filter(number=>number!==value)
+      setNuevodatoHora([...filtro])
+      console.log(nuevoDaosHora)
+    }
+   
   }
 
   useEffect(() => {
@@ -314,7 +319,7 @@ const Horarios = () => {
                 misHorarios.map(hora => (
                   <div className="card-single">
                     <div className="card-body">
-                      <div><h3>{hora.dia}</h3></div>
+                      <div className="tituLo"><h3>{hora.dia}</h3></div>
                       <div>
                         <div>{hora.horas}</div>
                       </div>
