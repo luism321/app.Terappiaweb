@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Alert } from "react-bootstrap"
 import { db } from "../firebase"
 import firebase from "../firebase"
-
+import {bufferMap} from 'rxjs-operators'
 
 export default function UpdateProfilePa() {
   const emailRef = useRef()
@@ -78,6 +78,7 @@ export default function UpdateProfilePa() {
       "religion": Religion,
       "num_principal": numeroPri,
       "num_secundario": numeroSe,
+      "foto_personal":state.picture,
     })
 
     if (emailRef.current.value !== currentUser.email) {
@@ -121,6 +122,39 @@ export default function UpdateProfilePa() {
     ele_2.onpaste = function (e) {
       e.preventDefault();
     }
+  }
+
+
+
+  const [statebarra,setStatebarra ]=useState(
+    {barra:0})
+  const [state,setState ]=useState({
+    piture:null
+  }) 
+  function handleChange(e){
+    const file=e.target.files[0]
+    const storageRef= firebase.storage().ref(`Usuarios/${currentUser.uid}/foto_personal/${file.name}`)
+    const task = storageRef.put(file)
+    
+    task.on('state_changed',(snapshot)=>{
+      const porcentage= (snapshot.bytesTransferred/snapshot.totalBytes)* 100;
+      setStatebarra({
+        barra: porcentage
+      })
+    },error=>{
+       setState({
+        message:`error:${error.message}`
+      })
+    },()=>{
+      task.snapshot.ref.getDownloadURL().then((url)=>{
+       const dato=url
+      setState({
+        message:"Foto cargada con Exito",
+        picture:dato
+      })
+    })
+    })
+    
   }
   async function handleLogout() {
     setError("")
@@ -220,8 +254,8 @@ export default function UpdateProfilePa() {
         <main>
           <div className="text-center a" ><h1 >Actualizar Perfil</h1></div>
           <section className="contact_info_area sec_pad bg_color">
-            <div className="upda">
-              <div className="container" id="A-1"></div>
+            <div className="upda text-center">
+              <img src={DatosNombre.foto_personal} id="A-1"></img>
             </div>
             <div className="container">
               <div className="row">
@@ -234,11 +268,13 @@ export default function UpdateProfilePa() {
                           <div className="form-group" id="email">
                             <label><b>Foto:</b></label>
                             <br />
-                            {/*<progress value={state.uploadValue} max='100'></progress>*/}
+                            {<progress value={statebarra.barra} max='100'></progress>}
                             <input className="form-control"
                               name='foto'
                               type='file'
+                              onChange={handleChange}
                             />
+                            {state.message}
                           </div>
                           <div className="form-group" id="email">
                             <label><b>Nombres:</b></label>

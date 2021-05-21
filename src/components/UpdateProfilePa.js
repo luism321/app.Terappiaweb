@@ -86,6 +86,11 @@ export default function UpdateProfile() {
       "profesion":Profesion,
       "precio_consulta":HonorarioCita,
       "precio_emergencia":HonorarioEmergencia,
+      "foto_personal":state.picture,
+      "titulo_universitario":stateDocTitulo.DocTitulo,
+      "carnet_medico":stateDocCarnet.DocCarnet,
+      "documento_identidad":stateDocCedula.DocCedula,
+
     })
 
     if (emailRef.current.value !== currentUser.email) {
@@ -129,7 +134,11 @@ export default function UpdateProfile() {
    ele_2.onpaste = function(e){
       e.preventDefault();
    }
-  }  
+  } 
+
+  const [statebarra,setStatebarra ]=useState(
+    {barra:0})
+
   const [state,setState ]=useState({
     uploadValue:0,
     piture:null
@@ -138,102 +147,120 @@ export default function UpdateProfile() {
   function handleChange(e){
     const file=e.target.files[0]
     console.log(file)
-    const storageRef= firebase.storage().ref(`fotos/${file.name}`)
+    const storageRef= firebase.storage().ref(`Usuarios/${currentUser.uid}/foto_personal/${file.name}`)
     const task = storageRef.put(file)
 
     task.on('state_changed',(snapshot)=>{
       const porcentage= (snapshot.bytesTransferred/snapshot.totalBytes)* 100
-      setState({
-        uploadValue: porcentage
+      setStatebarra({
+        barra: porcentage
       })
     },(error)=>{
        setState({
         message:`error:${error.message}`
       })
     },()=>{
-      setState({
-        message:"Foto cargada con Exito",
-        piture:task.snapshot.downloadURL
+      task.snapshot.ref.getDownloadURL().then((url)=>{
+      const dato=url
+       setState({
+         message:"Foto cargada con Exito",
+         picture:dato
+       })
       })
     })
   }
+
   const [stateDocTitulo,setStateDocTitulo ]=useState({
-    uploadValueDocTitulo:0,
     DocTitulo:null
   }) 
+  const [stateTitulo,setStateTitulo ]=useState(
+    {barra:0}
+    )
+
   function handleChangeDocTiulo(e){
     const file=e.target.files[0]
     console.log(file)
-    const storageRef= firebase.storage().ref(`Document/${file.name}`)
+    const storageRef= firebase.storage().ref(`Usuarios/${currentUser.uid}/titulo_universitario/${file.name}`)
     const task = storageRef.put(file)
 
     task.on('state_changed',(snapshot)=>{
       const porcentage= (snapshot.bytesTransferred/snapshot.totalBytes)* 100
-      setStateDocTitulo({
-        uploadValueDocTitulo: porcentage
+      setStateTitulo({
+        barra: porcentage
       })
     },(error)=>{
        setStateDocTitulo({
         message:`error:${error.message}`
       })
     },()=>{
-      setStateDocTitulo({
-        message:"Documento cargado con Exito",
-        DocTitulo:task.snapshot.downloadURL
+      task.snapshot.ref.getDownloadURL().then((url)=>{
+        const dato=url
+       setStateDocTitulo({
+         message:"Foto cargada con Exito",
+         DocTitulo:dato
+       })
       })
     })
   }
   
   const [stateDocCarnet,setStateDocCarnet ]=useState({
-    uploadValueDocCarnet:0,
     DocCarnet:null
   }) 
+  const [stateCarnet,setStateCarnet ]=useState(
+    {barra:0})
   function handleChangeDocCarnet(e){
     const file=e.target.files[0]
     console.log(file)
-    const storageRef= firebase.storage().ref(`Document/${file.name}`)
+    const storageRef= firebase.storage().ref(`Usuarios/${currentUser.uid}/carnet_medico/${file.name}`)
     const task = storageRef.put(file)
 
     task.on('state_changed',(snapshot)=>{
       const porcentage= (snapshot.bytesTransferred/snapshot.totalBytes)* 100
-      setStateDocCarnet({
-        uploadValueDocCarnet: porcentage
+      setStateCarnet({
+        barra: porcentage
       })
     },(error)=>{
        setStateDocCarnet({
         message:`error:${error.message}`
       })
     },()=>{
-      setStateDocCarnet({
-        message:"Documento cargado con Exito",
-        DocCarnet:task.snapshot.downloadURL
+      task.snapshot.ref.getDownloadURL().then((url)=>{
+        const dato=url
+       setStateDocCarnet({
+         message:"Foto cargada con Exito",
+         DocCarnet:dato
+       })
       })
     })
   }
   const [stateDocCedula,setStateDocCedula ]=useState({
-    uploadValueDocCedula:0,
     DocCedula:null
   }) 
+  const [stateCedula,setStateCedula ]=useState(
+    {barra:0})
 
   function handleChangeDocCedula(e){
     const file=e.target.files[0]
     console.log(file)
-    const storageRef= firebase.storage().ref(`Document/${file.name}`)
+    const storageRef= firebase.storage().ref(`Usuarios/${currentUser.uid}/cedula/${file.name}`)
     const task = storageRef.put(file)
 
     task.on('state_changed',(snapshot)=>{
       const porcentage= (snapshot.bytesTransferred/snapshot.totalBytes)* 100
-      setStateDocCedula({
-        uploadValueDocCedula: porcentage
+      setStateCedula({
+        barra: porcentage
       })
     },(error)=>{
        setStateDocCedula({
         message:`error:${error.message}`
       })
     },()=>{
-      setStateDocCedula({
-        message:"Documento cargado con Exito",
-        DocCedula:task.snapshot.downloadURL
+      task.snapshot.ref.getDownloadURL().then((url)=>{
+        const dato=url
+       setStateDocCedula({
+         message:"Foto cargada con Exito",
+         DocCedula:dato
+       })
       })
     })
   }
@@ -348,7 +375,7 @@ async function handleLogout() {
                 <input type="checkbox"/>
                 <p class="slide round" onClick={(e)=>OnActivo("Activo",e)}></p>
             </label></span>
-                <div></div>&nbsp;&nbsp;{DatosNombre.Nombres}
+                <div></div>&nbsp;&nbsp;{DatosNombre.nombres}
             </div>
             
         </header> 
@@ -367,7 +394,7 @@ async function handleLogout() {
           <div className="form-group" id="email">
               <label><b>Foto:</b></label>
               <br/>
-              {/*<progress value={state.uploadValue} max='100'></progress>*/ }
+              {<progress value={statebarra.barra} max='100'></progress> }
               <input className="form-control"
                 name='foto'
                 type='file'
@@ -542,7 +569,7 @@ async function handleLogout() {
             <div className="form-group mb-5" id="email">
               <label><b>Titulo universitario:</b></label>
               <br/>
-              {/*<progress value={stateDocTitulo.uploadValueDocTitulo} max='100'></progress>*/ }
+              {<progress value={stateTitulo.barra} max='100'></progress> }
               <input className="form-control"
                 name='titulo'
                 type='file'
@@ -553,7 +580,7 @@ async function handleLogout() {
             <div className="form-group mb-5" id="email">
               <label><b>Carnet:</b></label>
               <br/>
-              {/*<progress value={stateDocCarnet.uploadValueDocCarnet} max='100'></progress>*/ }
+              {<progress value={stateCarnet.barra} max='100'></progress> }
               <input className="form-control"
                 name='Carnet'
                 type='file'
@@ -564,7 +591,7 @@ async function handleLogout() {
             <div className="form-group mb-5" id="email">
               <label><b>Cédula:</b></label>
               <br/>
-              {/*<progress value={stateDocCedula.DocCedula} max='100'></progress>*/ }
+              {<progress value={stateCedula.barra} max='100'></progress> }
               <input className="form-control"
                 name='CedulaDoc'
                 type='file'
