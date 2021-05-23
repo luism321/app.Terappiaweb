@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Alert } from "react-bootstrap"
 import { db } from "../firebase"
 import firebase from "../firebase"
-import {bufferMap} from 'rxjs-operators'
+// import {bufferMap} from 'rxjs-operators'
 
 export default function UpdateProfilePa() {
   const emailRef = useRef()
