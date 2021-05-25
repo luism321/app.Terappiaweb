@@ -81,14 +81,14 @@ export default function Inicio() {
 
   if (currentDatosParan === "N/A") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psicólogo").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psicología").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psicólogo").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psicología").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -98,14 +98,14 @@ export default function Inicio() {
   }
   if (currentDatossuci === "¿Has tenido pensamientos suicidas?=Nunca") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psicólogo").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psicología").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psicólogo").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psicología").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -115,14 +115,14 @@ export default function Inicio() {
   }
   if (currentDatossuci === "Su hijo ha tenido pensamientos y/o intentos suicidas=Nunca") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psicólogo").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psicología").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psicólogo").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psicología").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -132,14 +132,14 @@ export default function Inicio() {
   }
   if (currentDatossuciHijo === "Su hijo ha tenido pensamientos y/o intentos suicidas=No lo sé") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "Psicólogo").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "Psicología").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psicólogo").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psicología").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -149,14 +149,14 @@ export default function Inicio() {
   }
   if (currentDatosMalos === "¿Has tenido pensamientos suicidas adolecente?=Nunca") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psicólogo").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psicología").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psicólogo").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psicología").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -167,14 +167,14 @@ export default function Inicio() {
 
   if (currentDatosPare === "¿Qué tipo de asesoramiento adulto estás buscando?=Pareja") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psicólogo").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psicología").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psicólogo").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psicología").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -184,14 +184,14 @@ export default function Inicio() {
   }
   if (currentDatosParan === "¿Has estado experimentado algunos de estos síntomas?=Paranoia, sensación de persecución, interpretación de mensajes a través de señales") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -203,14 +203,14 @@ export default function Inicio() {
 
   if (currentDatossuci === "¿Has tenido pensamientos suicidas?=Desde hace un tiempo") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -220,14 +220,14 @@ export default function Inicio() {
   }
   if (currentDatossuci === "¿Has tenido pensamientos suicidas?=Desde hace un tiempo") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -237,14 +237,14 @@ export default function Inicio() {
   }
   if (currentDatossuci === "¿Has tenido pensamientos suicidas?=Desde hace menos de dos semanas") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -254,14 +254,14 @@ export default function Inicio() {
   }
   if (currentDatossuci === "¿Has tenido pensamientos suicidas?=Justo ahora") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -271,14 +271,14 @@ export default function Inicio() {
   }
   if (currentDatosMiedo === "¿Actualmente sientes ansiedad, ataques de pánico o tienes algún miedo?=Si") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -288,14 +288,14 @@ export default function Inicio() {
   }
   if (currentDatosMedicacion === "¿Actualmente estás tomando alguna medicación (psicofármaco)?=Si") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -305,14 +305,14 @@ export default function Inicio() {
   }
   if (currentDatossuciHijo === "Su hijo ha tenido pensamientos y/o intentos suicidas=Desde hace un tiempo un tiempo") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -322,14 +322,14 @@ export default function Inicio() {
   }
   if (currentDatossuciHijo === "Su hijo ha tenido pensamientos y/o intentos suicidas=Desde hace menos de dos semanas") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -339,14 +339,14 @@ export default function Inicio() {
   }
   if (currentDatossuciHijo === "Su hijo ha tenido pensamientos y/o intentos suicidas=Justo ahora") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -356,14 +356,14 @@ export default function Inicio() {
   }
   if (currentDatosMalos === "¿Has tenido pensamientos suicidas adolecente?=Desde hace un tiempo un tiempo") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -373,14 +373,14 @@ export default function Inicio() {
   }
   if (currentDatosMalos === "¿Has tenido pensamientos suicidas adolecente?=Desde hace menos de dos semanas") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });
@@ -390,14 +390,14 @@ export default function Inicio() {
   }
   if (currentDatosMalos === "¿Has tenido pensamientos suicidas adolecente?=Justo ahora") {
     const array = [];
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").limit(6).get().then((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").limit(6).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         let use = doc.data()
         array.push(use);
       });
       setcurrenDatosPa(array);
     });
-    db.collection("Usuarios").where("especialidad", "==", "Psiquiatra").onSnapshot((querySnapshot) => {
+    db.collection("Usuarios").where("especialidad", "==", "Psiquiatría").onSnapshot((querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ ...doc.data() });

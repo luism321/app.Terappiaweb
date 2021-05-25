@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAuth } from "../contexts/AuthContext";
 import 'moment/locale/es'
 import { PayPalButton } from "react-paypal-button-v2";
-
+import firebase from "../firebase"
 import moment from 'moment';
 
 moment.locale('es');
@@ -43,13 +43,8 @@ export default function AgendarCitasNew() {
   const [HasPlan, setHasPlan] = useState(false)
   const [uidPlan, setuidPlan] = useState("")
   const [nuevoPrecio, setnuevoPrecio] = useState(0)
-
-  // const arrayNew=HorasDis.horas
-
-
-  // for (let i = 0; i < arrayNew; i++) { 
-  //   setHorasDis(arrayNew[i])
-  //   }
+  const [planes, setplanes] = useState([]);
+  const [currentDatos_3, setcurrenDatos_3] = useState("");
 
   const TraerDatos = () => {
     db.collection("Usuarios")
@@ -76,10 +71,33 @@ export default function AgendarCitasNew() {
 
     db.collection("Usuarios")
       .doc(id)
-      .get().then((doc) => {
+      .get().then( async (doc) => {
         if (doc.exists) {
           let users = doc.data()
+          let precioConsulta = parseInt(users.precio_consulta)
+          console.log(users)
           setDatosDoc(users);
+          const response = db.collection('Planes');
+          const data = await response.get();
+          let info = []
+          data.docs.forEach(item => {
+            let datos = item.data()
+            datos.$key = item.id
+
+            info.push(datos)
+          })
+          console.log(info)
+          console.log(precioConsulta)
+          for (let i = 0; i < info.length; i++) {
+            for (let j = 0; j < info[i].cantidadConsultas.length; j++) {
+              const porcentaje = ((precioConsulta * info[i].cantidadConsultas[j]) * info[i].descuentoConsultas[j]) / 100; 
+              const total = precioConsulta * info[i].cantidadConsultas[j]
+              info[i].precios[j] = Math.round(total - porcentaje)
+            }
+          }
+          console.log(info)
+          setplanes(info)
+          // fetchPlanes()
         }
       }).catch(function (error) {
         console.log("Error getting User:", error);
@@ -89,10 +107,33 @@ export default function AgendarCitasNew() {
   };
 
   useEffect(() => {
-    console.log("aqui")
-    TraerDatos();
-    // Fecha("2021-05-11")
+    firebase.auth().onAuthStateChanged(function (user) {
+      db.collection("Usuarios")
+        .doc(user.uid)
+        .get().then(function (doc) {
+          let users = doc.data()
+          users.$key = doc.id
+          setcurrenDatos_3(users);
+          // GET PLANES
+          TraerDatos();
+        });
+    })
   }, []);
+
+  const fetchPlanes = async () => {
+    // console.clear()
+    console.log(DatosDoc)
+    const response = db.collection('Planes');
+    const data = await response.get();
+    let info = []
+    data.docs.forEach(item => {
+      let datos = item.data()
+      datos.$key = item.id
+      info.push(datos)
+    })
+    console.log(info)
+    setplanes(info)
+  }
 
 
   const Fecha = (e, dataInfo) => {
@@ -156,12 +197,61 @@ export default function AgendarCitasNew() {
 
   }
 
-  function vaciarState() {
+  const vaciarState = () => {
     setError("")
   }
 
+  const UpdatePlan = (data, details, Plan, tipoPlan, descuento, limiteConsultas, id_Plan) => {
+    console.clear()
 
-  function TomarHoraCita(e) {
+    const datos = currentDatos_3
+    datos.Plan = Plan
+    datos.Tipo_plan = tipoPlan
+    datos.consultasDisponibles = limiteConsultas
+    datos.uid_Plan = id_Plan
+
+    console.log(datos)
+
+    db.collection("Usuarios").doc(currentDatos_3.$key).set(datos)
+      .then(resp => {
+        db.collection("HistorialPagos").doc().set({
+          tipo_pago: "Compra de plan",
+          nombres_paciente: currentDatos_3.nombres,
+          uid_paciente: currentDatos_3.$key,
+          nombre_especialista: "",
+          cedula_paciente: currentDatos_3.cedula,
+          uid_especialista: "",
+          apellidos_paciente: currentDatos_3.apellidos,
+          estatusPago: details.status,
+          apellido_especialista: "",
+          num_principal_paciente: currentDatos_3.num_principal,
+          fecha_Pago: moment().format("DD/MM/YYYY"),
+          idPago: details.id,
+          fechaPagoPaypal: details.create_time,
+          direccionPagador: details.payer.address,
+          emailPagador: details.payer.name,
+          monto: details.purchase_units[0].amount,
+          facilitatorAccessToken: data.facilitatorAccessToken,
+          orderID: data.orderID,
+          payerID: data.payerID,
+          tipo_plan: tipoPlan,
+          Plan: Plan
+        }).then(() => {
+          history.push("/")
+          alert("Se realizo el cambio de plan exitosamente !!!")
+          // setExito("Consulta agregada con Éxito")
+        })
+      })
+  }
+
+  const errorUpdatePlan = () => {
+    alert("Ha ocurrido un problema al relizar el cambio de plan, intente otra vez")
+    console.clear()
+    console.log("No se realizo el cambio")
+  }
+
+
+  const TomarHoraCita = (e) => {
     if (uidPlan != "") {
       db.collection("Planes")
         .doc(uidPlan)
@@ -174,25 +264,25 @@ export default function AgendarCitasNew() {
             console.log(DatosNombre)
             console.log(DatosDoc)
             for (let i = 0; i < plan.planes.length; i++) {
-              if(plan.planes[i] == DatosNombre.Plan){
-                console.log(parseInt(DatosDoc.precio_consulta) * parseInt(plan.descuentoConsultas[i]) / 100) 
+              if (plan.planes[i] == DatosNombre.Plan) {
+                console.log(parseInt(DatosDoc.precio_consulta) * parseInt(plan.descuentoConsultas[i]) / 100)
                 setnuevoPrecio(DatosDoc.precio_consulta - (parseInt(DatosDoc.precio_consulta) * parseInt(plan.descuentoConsultas[i]) / 100))
                 console.log(nuevoPrecio)
               }
             }
-            setTomarHoras(e)  
+            setTomarHoras(e)
           }
         }).catch(function (error) {
           console.log("Error getting User:", error);
           console.log(error);
         });
     } else {
-      setTomarHoras(e)  
+      setTomarHoras(e)
     }
 
   }
 
-  function AgregarConsulta(details, data) {
+  const AgregarConsulta = (details, data) => {
     // console.log(details)
     // console.log(data)
     console.log(TomarHora)
@@ -223,41 +313,72 @@ export default function AgendarCitasNew() {
           apellido_especialista: DatosDoc.apellidos,
           num_principal_paciente: DatosNombre.num_principal,
           fecha_Pago: moment().format("DD/MM/YYYY"),
-          idPago:details.id,
-          fechaPagoPaypal:details.create_time,
-          direccionPagador:details.payer.address,
-          emailPagador:details.payer.name,
-          monto:details.purchase_units[0].amount,
-          facilitatorAccessToken:data.facilitatorAccessToken,
-          orderID:data.orderID,
-          payerID:data.payerID,
-          tipo_plan:"",
-          Plan:""
+          idPago: details.id,
+          fechaPagoPaypal: details.create_time,
+          direccionPagador: details.payer.address,
+          emailPagador: details.payer.name,
+          monto: details.purchase_units[0].amount,
+          facilitatorAccessToken: data.facilitatorAccessToken,
+          orderID: data.orderID,
+          payerID: data.payerID,
+          tipo_plan: "",
+          Plan: ""
         }).then(() => {
           let infoFinal = DatosNombre
           console.clear()
           console.log(uidPlan)
           console.log(DatosNombre)
           if (uidPlan != "" && DatosNombre.consultasDisponibles > 0) {
-            infoFinal.consultasDisponibles = infoFinal.consultasDisponibles - 1 
-            if(infoFinal.consultasDisponibles == 0){
+            infoFinal.consultasDisponibles = infoFinal.consultasDisponibles - 1
+            if (infoFinal.consultasDisponibles == 0) {
               infoFinal.Plan = ""
               infoFinal.Tipo_plan = ""
               infoFinal.uid_Plan = ""
             }
             db.collection("Usuarios").doc(DatosNombre.$key).set(infoFinal)
-            .then(resp=>{
-              history.push("/")
-              setExito("Consulta agregada con Éxito")
-            })
+              .then(resp => {
+                history.push("/")
+                setExito("Consulta agregada con Éxito")
+              })
           }
         })
       })
 
   }
 
-  function errorUpdatePlan() {
-    console.log("Error al pagar")
+  const AgregarConsultaPagada = () => {
+    db.collection("Citas").doc().set({
+      hora: TomarHora,
+      nombres_paciente: DatosNombre.nombres,
+      uid_paciente: DatosNombre.uid,
+      nombre_especialista: DatosDoc.nombres,
+      fecha: fecha,
+      cedula_paciente: DatosNombre.cedula,
+      uid_especialista: DatosDoc.uid,
+      apellidos_paciente: DatosNombre.apellidos,
+      estatus: Estatus,
+      apellido_especialista: DatosDoc.apellidos,
+      num_principal_paciente: DatosNombre.num_principal,
+      fecha_creacion: moment().format("DD/MM/YYYY")
+    }).then(resp => {
+      let infoFinal = DatosNombre
+      console.clear()
+      console.log(uidPlan)
+      console.log(DatosNombre)
+      if (uidPlan != "" && DatosNombre.consultasDisponibles > 0) {
+        infoFinal.consultasDisponibles = infoFinal.consultasDisponibles - 1
+        if (infoFinal.consultasDisponibles == 0) {
+          infoFinal.Plan = ""
+          infoFinal.Tipo_plan = ""
+          infoFinal.uid_Plan = ""
+        }
+        db.collection("Usuarios").doc(DatosNombre.$key).set(infoFinal)
+          .then(resp => {
+            history.push("/")
+            setExito("Consulta agregada con Éxito")
+          })
+      }
+    })
   }
 
   function most(e) {
@@ -431,76 +552,50 @@ export default function AgendarCitasNew() {
                     {DatosDoc.nombres}&nbsp;&nbsp;{DatosDoc.apellidos}
                   </div>
                   {/* <div><label>Costo:</label></div> */}
-                  
-                  {uidPlan != "" ? 
-                  <div className="mb-3">
-                    <div> Precio anterior: {DatosDoc.precio_consulta}$</div> 
-                    <div> Precio nuevo: {nuevoPrecio}$</div>
-                   </div> 
-                   :
-                   <div className="mb-3">
-                    <div> Precio: {DatosDoc.precio_consulta}$</div> 
-                   </div>
+
+                  {uidPlan == "" ?
+                    <div className="mb-3">
+                      <div> Precio: {DatosDoc.precio_consulta}$</div>
+                    </div>
+                    :
+                    ''
                   }
-                    
-                  
+
+
                   <div className="">
                     {TomarHora}
                   </div>
                 </div>
                 <div id="boton" className="botonA" Style="width: 100%;justify-content: center;display: flex;">
-                  {uidPlan != "" ? 
+                  {uidPlan == "" ?
                     <PayPalButton
-                    amount={nuevoPrecio}
-                    // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
-                    onSuccess={(details, data) => {
-                      // OPTIONAL: Call your server to save the transaction
-                      fetch("/paypal-transaction-complete", {
-                        method: "post",
-                        body: JSON.stringify({
-                          orderId: data.orderID
+                      amount={DatosDoc.precio_consulta}
+                      // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
+                      onSuccess={(details, data) => {
+                        // OPTIONAL: Call your server to save the transaction
+                        fetch("/paypal-transaction-complete", {
+                          method: "post",
+                          body: JSON.stringify({
+                            orderId: data.orderID
+                          })
                         })
-                      })
-                        .then(resp => {
-                          AgregarConsulta(details, data)
-                        })
-                    }}
-                    catchError={(error) => {
-                      console.log(error)
-                      errorUpdatePlan()
-                    }}
-                    options={{
-                      clientId: "AV5h0ivhjvRnCQYyPCjnCzumB7lKEJP1IADFcBoqSRNVGfdTd3EkFFdDUVmFzxr2-gVQKS9evl1_E_Er",
-                      currency: "USD"
-                    }}
-                  />
-                  :
-                  <PayPalButton
-                    amount={DatosDoc.precio_consulta}
-                    // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
-                    onSuccess={(details, data) => {
-                      // OPTIONAL: Call your server to save the transaction
-                      fetch("/paypal-transaction-complete", {
-                        method: "post",
-                        body: JSON.stringify({
-                          orderId: data.orderID
-                        })
-                      })
-                        .then(resp => {
-                          AgregarConsulta(details, data)
-                        })
-                    }}
-                    catchError={(error) => {
-                      console.log(error)
-                      errorUpdatePlan()
-                    }}
-                    options={{
-                      clientId: "AV5h0ivhjvRnCQYyPCjnCzumB7lKEJP1IADFcBoqSRNVGfdTd3EkFFdDUVmFzxr2-gVQKS9evl1_E_Er",
-                      currency: "USD"
-                    }}
-                  />
+                          .then(resp => {
+                            AgregarConsulta(details, data)
+                          })
+                      }}
+                      catchError={(error) => {
+                        console.log(error)
+                        errorUpdatePlan()
+                      }}
+                      options={{
+                        clientId: "AV5h0ivhjvRnCQYyPCjnCzumB7lKEJP1IADFcBoqSRNVGfdTd3EkFFdDUVmFzxr2-gVQKS9evl1_E_Er",
+                        currency: "USD"
+                      }}
+                    />
+                    :
+                    <button onClick={AgregarConsultaPagada}>Registrar consulta</button>
                   }
-                  
+
                   {/* <button onClick={AgregarConsulta}>Registrar consulta</button> */}
                 </div>
               </div>
@@ -516,10 +611,66 @@ export default function AgendarCitasNew() {
           </main>
           : <div></div>}
 
-        {/* {HasPlan === false ?
-          <div><h1>No tienes plan ? selecciona uno</h1></div> :
-          <div><h1>Si tiene plan</h1></div>
-        } */}
+        {mostrarhoras === true && uidPlan == "" ?
+          <main>
+            {planes.length != 0 ? (
+              planes.map(array => (
+                <div>
+                  <h1 className="dash-title text-center mb-5">Plan {array.tipo_plan}</h1>
+                  <div className="dash-cards">
+                    {array.planes.map((plan, index) => (
+                      <div className="card-single_planes text-center">
+                        <div className="card-body">
+                          {/* <div> */}
+                          <div id="stars"><div></div></div>
+                          <h3 className="mb-3" id="titleBasico">Plan {plan}</h3>
+                          <div>
+                            <h1 className="mb-5" >${array.precios[index]}</h1>
+                          </div>
+
+                          <div className="mb-3">
+                            {array.description[index]}
+                          </div>
+                          <div className="mb-5 " >
+                            {/* <button onClick={() => UpdatePlan("data", "details", plan, array.tipo_plan, array.descuentoConsultas[index], array.precios[index])}>x</button> */}
+                            <PayPalButton
+                              amount={array.precios[index]}
+                              onSuccess={(details, data) => {
+                                fetch("/paypal-transaction-complete", {
+                                  method: "post",
+                                  body: JSON.stringify({
+                                    orderId: data.orderID
+                                  })
+                                })
+                                  .then(resp => {
+                                    // UpdatePlan(data, details, "Basico", "Psicologo", 5, 4)
+
+                                    UpdatePlan(data, details, plan, array.tipo_plan, array.descuentoConsultas[index], array.cantidadConsultas[index], array.$key)
+                                  })
+                              }}
+                              catchError={(error) => {
+                                console.log(error)
+                                errorUpdatePlan()
+                              }}
+                              options={{
+                                clientId: "AV5h0ivhjvRnCQYyPCjnCzumB7lKEJP1IADFcBoqSRNVGfdTd3EkFFdDUVmFzxr2-gVQKS9evl1_E_Er",
+                                currency: "USD"
+                              }}
+                            />
+                          </div>
+                          {/* </div> */}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))
+            ) : ''
+            }
+          </main>
+          :
+          ""
+        }
       </div>
     </>
 
