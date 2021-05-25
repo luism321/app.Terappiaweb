@@ -9,6 +9,8 @@ import { db } from "../firebase"
 import firebase from "../firebase"
 import emailjs from 'emailjs-com';
 import { init } from 'emailjs-com';
+import moment from 'moment';
+moment.locale('es');
 init("user_18jqcwflnGbkPgeaoNzWQ");
 
 
@@ -23,8 +25,8 @@ export default function Video() {
     const [firtinforme, setFirstinforme] = useState(true)
     const [currentPerfil, setCurrentPerfil] = useState("");
     const [showMessage, setShowMessage] = useState(false);
-    const frmContact = { linkRom:''};
-    const [contact,setContact] = useState(frmContact);
+    const frmContact = { linkRoom: '' };
+    const [contact, setContact] = useState(frmContact);
 
 
     firebase.auth().onAuthStateChanged(function (user) {
@@ -95,19 +97,18 @@ export default function Video() {
         }
     }
 
-
-
     const jitsiContainerStyle = {
         width: '100%',
         height: '100%',
     }
+
     const clMedicalal = () => {
 
         let r = Math.random().toString(36).substring(7);
 
-        let link = 'meet.jit.si'+'/'+currentUser.uid + r
+        let link = 'meet.jit.si' + '/' + currentUser.uid + r
 
-        setContact({linkRom:link})
+        setContact({ linkRoom: link })
 
         const domain = 'meet.jit.si';
         const options = {
@@ -127,16 +128,29 @@ export default function Video() {
 
 
     const handleSubmit = e => {
-        e.preventDefault();
-            console.log(contact)
 
-        emailjs.send('service_e4olqec', 'template_0ffcydz', contact, 'user_18jqcwflnGbkPgeaoNzWQ')
-            .then((response) => {
-                console.log('SUCCESS!', response.status, response.text);
-                setShowMessage(true);
-            }, (err) => {
-                console.log('FAILED...', err);
-            });
+        // e.preventDefault();
+
+        // emailjs.send('service_e4olqec', 'template_0ffcydz', contact, 'user_18jqcwflnGbkPgeaoNzWQ')
+        //     .then((response) => {
+        //         console.log('SUCCESS!', response.status, response.text);
+        //         setShowMessage(true);
+        //     }, (err) => {
+        //         console.log('FAILED...', err);
+        //     });
+
+            const paciente = JSON.parse(localStorage.getItem('paciente_conferencia'));
+
+            db.collection("Conferencias").doc().set({
+                fecha_notificacion: moment().format("DD/MM/YYYY hh:mm A"),
+                uid_especialista: currentUser.uid,
+                nombres_paciente: paciente.nombre,
+                apellidos_paciente: paciente.apellido,
+                uid_paciente: paciente.id,
+                room_link: contact.linkRoom
+            }).then(resp =>{
+                console.log(resp)
+            })
     }
 
 
